@@ -145,7 +145,7 @@ final class Build {
         $item[] = ' +P  Model Class保存路径, 默认保存在work.php相应目录下的BuildResult文件夹下';
         $item[] = ' +e  Model Class父类， 默认 \Base\Model\AbstractModel (未开启命名空间，\'\\\' 以 \'_\' 代替)';
         $item[] = ' +x  Model Class文件后缀名, 默认 php';
-        $item[] = ' +l  Model Class文件是否保留下划线, 默认保留(1), 值[1,0]';
+        $item[] = ' +l  Model Class文件名/类名是否保留下划线, 默认保留(1), 值[1,0]';
         $item[] = ' +m  Model Class命名类型，1. %sModel  2. Model%s  3.%s_Model  4. Model_%s';
         $item[] = ' +N  Model Class的命名空间，默认 \\';
         $item[] = ' +o  是否开启命名空间[0, 1]， 默认 1';
