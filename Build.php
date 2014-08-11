@@ -52,13 +52,14 @@ final class Build {
 
         $db = $this->getDbResponse();
         $st = \Lib\Status::getInstance();
+        $op = \Lib\Options::getInstance();
 
         if(empty($this->_dbname)){
             throw new \Lib\Exception('database unset');
         }
 
         $st->show('reading configuration tables', 2);
-        $tables  = \Lib\Options::getInstance()->getTable();
+        $tables  = $op->getTable();
 
         if(empty($tables)){
             $st->show('not found configuration tables', 2);
@@ -82,8 +83,9 @@ final class Build {
 
         foreach ($tables as $table) {
             $st->show('processing [' . $table . ']', 2);
-            $modelContents->setTableName($table)->setColumns($db->findCols($table))->build();
-            $modelFile->setTableName($table)->build();
+            $tableName = ($op->getUnderline() === false) ? str_replace('_', '', $table) : $table;
+            $modelContents->setTableName($tableName)->setColumns($db->findCols($table))->build();
+            $modelFile->setTableName($tableName)->build();
             $modelContents->reset();
             $modelFile->reset();
             $st->show('done', 2);
@@ -143,6 +145,7 @@ final class Build {
         $item[] = ' +P  Model Class保存路径, 默认保存在work.php相应目录下的BuildResult文件夹下';
         $item[] = ' +e  Model Class父类， 默认 \Base\Model\AbstractModel (未开启命名空间，\'\\\' 以 \'_\' 代替)';
         $item[] = ' +x  Model Class文件后缀名, 默认 php';
+        $item[] = ' +l  Model Class文件是否保留下划线, 默认保留(1), 值[1,0]';
         $item[] = ' +m  Model Class命名类型，1. %sModel  2. Model%s  3.%s_Model  4. Model_%s';
         $item[] = ' +N  Model Class的命名空间，默认 \\';
         $item[] = ' +o  是否开启命名空间[0, 1]， 默认 1';

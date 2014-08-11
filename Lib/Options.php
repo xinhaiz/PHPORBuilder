@@ -9,6 +9,7 @@ final class Options {
         80  => 'path',         // +P
         101 => 'extendName',   // +e
         120 => 'ext',          // +x
+        108 => 'underline',     // +l
         109 => 'modelType',    // +m
         78  => 'namespace',    // +N
         111 => 'onNamespace',  // +o
@@ -30,6 +31,7 @@ final class Options {
     private $_tab         = '    '; // 4空格
     private $_view        = 1;
     private $_namespace   = '\\';
+    private $_underline   = true;
     private $_onNamespace = true;
     private $_username    = null;
     private $_host        = null;
@@ -384,5 +386,26 @@ final class Options {
         }
 
         return $namespace;
+    }
+
+    /**
+     * 下划线
+     *
+     * @param boolean|1|0 $underline
+     * @return \Lib\Options
+     */
+    public function setUnderline($underline){
+        $this->_underline = (bool)$underline;
+
+        return $this;
+    }
+
+    /**
+     * 下划线
+     *
+     * @return boolean
+     */
+    public function getUnderline(){
+        return (bool)$this->_underline;
     }
 }
