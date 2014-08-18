@@ -70,7 +70,7 @@ final class Build {
      * @return string
      */
     public function toProperty($name, $value, $permissions = 'protected') {
-        return $this->_tab . $permissions . ' $' . $name . ' = ' . ($value === null ? 'null' : $value) . ';' . "\n";
+        return $this->_tab . $permissions . ' $' . $name . ' = ' . ($value === null ? 'null' : (!is_numeric($value) ? "'" . $value . "'" : $value)) . ';' . "\n";
     }
 
     /**

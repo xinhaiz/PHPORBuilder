@@ -117,6 +117,7 @@ final class Content {
 
         $name    = strtolower($column['column_name']);
         $type    = (isset($column['column_type'])) ? $column['column_type'] : null;
+        $default = (isset($column['column_default'])) ? $column['column_default'] : null;
         $comment = (!empty($column['column_comment'])) ? $column['column_comment'] : ucfirst($name);
         $extra   = (isset($column['extra'])) ? $column['extra'] : null;
         $key     = (isset($column['column_key'])) ? $column['column_key'] : null;
@@ -137,7 +138,7 @@ final class Content {
 
         $property = array(
             $build->toComment($commentArr),
-            $build->toProperty('_' . $name, null)
+            $build->toProperty('_' . $name, $default)
         );
 
         $buffer->pushProperty(implode("\n", $property));
