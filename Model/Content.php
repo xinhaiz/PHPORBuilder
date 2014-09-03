@@ -112,10 +112,19 @@ final class Content {
      * @param array $column
      */
     private function parseColumn(array $column) {
-        $build  = \Model\Build::getInstance();
-        $buffer = \Model\Buffer::getInstance();
+        $build   = \Model\Build::getInstance();
+        $buffer  = \Model\Buffer::getInstance();
+        $options = \Lib\Options::getInstance();
+        $name    = (isset($column['column_name']) ? strtolower($column['column_name']) : null);
 
-        $name    = strtolower($column['column_name']);
+        if(empty($name)){
+            return false;
+        }
+
+        if($options->getColunderline() === false){
+            $name = trim(str_replace('_', '', $name));
+        }
+
         $type    = (isset($column['column_type'])) ? $column['column_type'] : null;
         $default = (isset($column['column_default'])) ? $column['column_default'] : null;
         $comment = (!empty($column['column_comment'])) ? $column['column_comment'] : ucfirst($name);
@@ -147,8 +156,6 @@ final class Content {
             str_repeat($this->_tab, 2) . '$this->_' . $name . ' = (' . $rType . ')$' . $name . ';' . "\n",
             str_repeat($this->_tab, 2) . 'return $this;'
         );
-
-        $options = \Lib\Options::getInstance();
 
         $commentArr[99]  = '@param ' . $rType . ' $' . $name;
         $commentArr[100] = '@return ' . ltrim($options->getNamespace(), '_')

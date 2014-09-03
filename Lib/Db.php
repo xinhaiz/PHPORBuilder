@@ -7,7 +7,7 @@ class Db {
     protected $_db     = null;
     protected $_dbname = null;
 
-    public function __construct($host, $dbname, $username, $passwd) {
+    public function __construct(\Lib\DbConfig $dbConfig) {
         $status = \Lib\Status::getInstance();
         $maxTry = 5;
         $index  = 1;
@@ -19,7 +19,7 @@ class Db {
             $index++;
 
             try {
-                $pdo = new \PDO('mysql:host=' . $host . ';dbname=' . $dbname, $username, $passwd);
+                $pdo = new \PDO($dbConfig->getDsn(), $dbConfig->getUsername(), $dbConfig->getPasswd());
             } catch (\Exception $e){
                 $status->show($e->getMessage(), 3);
                 continue;
@@ -32,11 +32,18 @@ class Db {
             throw new \Lib\Exception('connection failed');
         }
 
-        $pdo->query("SET NAMES 'utf8'");
+        $options = $dbConfig->getOptions();
+
+        if(!empty($options)) {
+            foreach ($options as $option) {
+                $status->show('querying driver option [' . $option . ']', 3);
+                $pdo->query($option);
+            }
+        }
 
         $status->show('connect successed', 2);
         $this->_db     = $pdo;
-        $this->_dbname = $dbname;
+        $this->_dbname = $dbConfig->getDbname();
     }
 
     /**

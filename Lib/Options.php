@@ -5,11 +5,12 @@ namespace Lib;
 final class Options {
 
     protected static $_instance = null;
-    protected $_options = array(
-        80  => 'path',         // +P
+    protected $_mapOptions = array(
+        102 => 'filepath',     // +f
         101 => 'extendName',   // +e
         120 => 'ext',          // +x
-        108 => 'underline',     // +l
+        108 => 'underline',    // +l
+        76  => 'colunderline', // +L
         109 => 'modelType',    // +m
         78  => 'namespace',    // +N
         111 => 'onNamespace',  // +o
@@ -19,25 +20,30 @@ final class Options {
         104 => 'host',         // +h
         112 => 'passwd',       // +p
         110 => 'dbname',       // +n
+        80  => 'port',         // +P
+        79  => 'options',      // +O
         116 => 'table',        // +t
         118 => 'view'          // +v
       );
 
-    private $_path        = null;
-    private $_extendName  = '\\Base\\Model\\AbstractModel';
-    private $_modelType   = '%sModel';
-    private $_dbConfig    = 'db';
-    private $_ext         = '.php';
-    private $_tab         = '    '; // 4空格
-    private $_view        = 1;
-    private $_namespace   = '\\';
-    private $_underline   = true;
-    private $_onNamespace = true;
-    private $_username    = null;
-    private $_host        = null;
-    private $_passwd      = null;
-    private $_dbname      = null;
-    private $_table       = null;
+    private $_filepath     = null;
+    private $_extendName   = null;
+    private $_modelType    = '%sModel';
+    private $_ext          = '.php';
+    private $_tab          = '    '; // 4空格
+    private $_view         = 3;
+    private $_namespace    = '\\';
+    private $_underline    = false;
+    private $_colunderline = true;
+    private $_onNamespace  = true;
+    private $_dbConfig     = null;
+    private $_host         = '127.0.0.1';
+    private $_username     = null;
+    private $_passwd       = null;
+    private $_port         = 3306;
+    private $_dbname       = null;
+    private $_options      = array("SET NAMES 'utf8'");
+    private $_table        = null;
 
     private function __construct() {}
 
@@ -61,28 +67,28 @@ final class Options {
      * @return string
      */
     public function getOptionsName($code){
-        return (isset($this->_options[$code])) ? $this->_options[$code] : null;
+        return (isset($this->_mapOptions[$code])) ? $this->_mapOptions[$code] : null;
     }
 
     /**
-     * 设置写入路径
+     * 设置写入文件路径
      *
-     * @param string $path
+     * @param string $filepath
      * @return \Lib\Optioins
      */
-    public function setPath($path){
-        $this->_path = (string)$path;
+    public function setFilepath($filepath){
+        $this->_filepath = (string)$filepath;
 
         return $this;
     }
 
     /**
-     * 设置写入路径
+     * 设置写入文件路径
      *
      * @return string
      */
-    public function getPath(){
-        return (empty($this->_path) ? APP_PATH . DS . 'BuildResult' : $this->_path);
+    public function getFilepath(){
+        return (empty($this->_filepath) ? APP_PATH . DS . 'BuildResult' : $this->_filepath);
     }
 
     /**
@@ -139,9 +145,9 @@ final class Options {
 
         return $this;
     }
-
     /**
      * 模型后缀格式
+
      *
      * @return string
      */
@@ -156,7 +162,7 @@ final class Options {
      * @return \Lib\Options
      */
     public function setDbConfig($dbConfig){
-        $this->_dbConfig = (string)$dbConfig;
+        $this->_dbConfig = ($dbConfig === '0' || $dbConfig === 'false' || $dbConfig === 'null') ? false : (string)$dbConfig;
 
         return $this;
     }
@@ -278,7 +284,7 @@ final class Options {
     /**
      * 连接数据库用户密码
      *
-     * @param string $username
+     * @param string $passwd
      * @return \Lib\Options
      */
     public function setPasswd($passwd){
@@ -318,6 +324,52 @@ final class Options {
     }
 
     /**
+     * 连接数据库主机端口
+     *
+     * @param int $port
+     * @return \Lib\Options
+     */
+    public function setPort($port){
+        $this->_port = (int)$port;
+
+        return $this;
+    }
+
+    /**
+     * 连接数据库主机端口
+     *
+     * @return int
+     */
+    public function getPort(){
+        return $this->_port;
+    }
+
+    /**
+     * 连接数据库驱动选项
+     *
+     * @param int $options
+     * @return \Lib\DbConfig
+     */
+    public function setOptions($options){
+        if(is_string($options)) {
+            $options = explode(',', $options);
+        }
+
+        $this->_options = (array)$options;
+
+        return $this;
+    }
+
+    /**
+     * 连接数据库驱动选项
+     *
+     * @return int
+     */
+    public function getOptions(){
+        return $this->_options;
+    }
+
+    /**
      * 是否查看building状态
      *
      * @param string $view
@@ -345,7 +397,7 @@ final class Options {
      * @return \Lib\Options
      */
     public function setOnNamespace($onNamespace){
-        $this->_onNamespace = (boolean)$onNamespace;
+        $this->_onNamespace = ($onNamespace === '0' || $onNamespace === 'false' || $onNamespace === 'null') ? false : (bool)$onNamespace;
 
         return $this;
     }
@@ -395,7 +447,7 @@ final class Options {
      * @return \Lib\Options
      */
     public function setUnderline($underline){
-        $this->_underline = (bool)$underline;
+        $this->_underline = ($underline === '0' || $underline === 'false' || $underline === 'null') ? false : (bool)$underline;
 
         return $this;
     }
@@ -407,5 +459,26 @@ final class Options {
      */
     public function getUnderline(){
         return (bool)$this->_underline;
+    }
+
+    /**
+     * 列名下划线
+     *
+     * @param boolean|1|0 $colunderline
+     * @return \Lib\Options
+     */
+    public function setColunderline($colunderline){
+        $this->_colunderline = ($colunderline === '0' || $colunderline === 'false' || $colunderline === 'null') ? false : (bool)$colunderline;
+
+        return $this;
+    }
+
+    /**
+     * 列名下划线
+     *
+     * @return boolean
+     */
+    public function getColunderline(){
+        return (bool)$this->_colunderline;
     }
 }

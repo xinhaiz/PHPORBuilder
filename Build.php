@@ -11,7 +11,7 @@ final class Build {
         require_once(APP_PATH . DS . 'Lib' . DS . 'Loader.php');
         \Lib\Loader::getInstance();
 
-        $params = \Lib\Params::getInstance();
+        $params       = \Lib\Params::getInstance();
         $params->setParams($argv)->parse();
         $this->_state = $params->getState();
     }
@@ -20,7 +20,7 @@ final class Build {
      * 流程处理前执行
      */
     public function before() {
-        if($this->_state === true){
+        if ($this->_state === true) {
             \Lib\Status::getInstance()->show('starting');
         }
     }
@@ -29,7 +29,7 @@ final class Build {
      * 流程处理后执行
      */
     public function after() {
-        if($this->_state === true){
+        if ($this->_state === true) {
             $this->_state = false;
             \Lib\Status::getInstance()->show('ended');
         }
@@ -42,8 +42,8 @@ final class Build {
      * @throws \Lib\Exception
      */
     public function process() {
-        if($this->_state === false){
-            if(\Lib\Params::getInstance()->showHelp() === true){
+        if ($this->_state === false) {
+            if (\Lib\Params::getInstance()->showHelp() === true) {
                 $this->getHelp();
             }
 
@@ -54,20 +54,21 @@ final class Build {
         $st = \Lib\Status::getInstance();
         $op = \Lib\Options::getInstance();
 
-        if(empty($this->_dbname)){
+        if (empty($this->_dbname)) {
             throw new \Lib\Exception('database unset');
         }
 
         $st->show('reading configuration tables', 2);
-        $tables  = $op->getTable();
+        $tables = $op->getTable();
 
-        if(empty($tables)){
+        if (empty($tables)) {
             $st->show('not found configuration tables', 2);
             $st->show('reading database ：[' . $this->_dbname . ']', 2);
             $tables = $db->findTables();
-        } else {
-            foreach ($tables as $table){
-                if($db->isExistTable($table) === false){
+        }
+        else {
+            foreach ($tables as $table) {
+                if ($db->isExistTable($table) === false) {
                     throw new \Lib\Exception('unkown table \'' . $table . '\'');
                 }
             }
@@ -84,6 +85,11 @@ final class Build {
         foreach ($tables as $table) {
             $st->show('processing [' . $table . ']', 2);
             $tableName = ($op->getUnderline() === false) ? str_replace('_', '', $table) : $table;
+
+            if (preg_match('/^[0-9]+/', $tableName)) {
+                $tableName = ltrim(preg_replace('/^[0-9]+/', '', $tableName), '_');
+            }
+
             $modelContents->setTableName($tableName)->setColumns($db->findCols($table))->build();
             $modelFile->setTableName($tableName)->build();
             $modelContents->reset();
@@ -102,32 +108,40 @@ final class Build {
     protected function getDbResponse() {
         if (!$this->_db instanceof \Lib\Db) {
             $options  = \Lib\Options::getInstance();
-            $host     = $options->getHost();
-            $username = $options->getUsername();
-            $dbname   = $options->getDbname();
+            $dbConfig = \Lib\DbConfig::getInstance();
+            $userName = $options->getUsername();
             $passwd   = $options->getPasswd();
 
-            if(empty($host) && empty($username) && empty($passwd)){
-                $dbConfig = '\\Config\\' . ucfirst(strtolower($options->getDbConfig()));
+            if (empty($userName) && empty($passwd) || $options->getDbConfig() === false) {
+                $configCls = '\\Config\\' . ucfirst(strtolower($options->getDbConfig()));
+                $config    = new $configCls();
 
-                $config = new $dbConfig();
+                if ($config instanceof \Config\ConfigAbstract) {
+                    foreach ($config->getConfig() as $key => $value) {
+                        $set = 'set' . ucfirst(strtolower($key));
 
-                if (!$config instanceof \Config\ConfigAbstract) {
-                    throw new \Lib\Exception('invalid database config');
+                        if(method_exists($config, $set) && !empty($value)) {
+                            $dbConfig->{$set}($value);
+                        }
+                    }
                 }
+            } else {
+                foreach(array('host', 'username', 'port', 'dbname', 'passwd', 'port', 'options') as $name) {
+                    $get = 'get' . ucfirst(strtolower($name));
 
-                $host     = $config->get('host');
-                $username = $config->get('username');
+                    if(method_exists($options, $get)) {
+                        $val = $options->{$get}();
+                        $set = 'set' . ucfirst(strtolower($name));
 
-                if(empty($dbname)){
-                    $dbname = $config->get('dbname');
+                        if(!empty($val) && method_exists($dbConfig, $set)) {
+                            $dbConfig->{$set}($val);
+                        }
+                    }
                 }
-
-                $passwd   = $config->get('passwd');
             }
 
-            $this->_db = new \Lib\Db($host, $dbname, $username, $passwd);
-            $this->_dbname = $dbname;
+            $this->_db     = new \Lib\Db($dbConfig);
+            $this->_dbname = $dbConfig->getDbname();
         }
 
         return $this->_db;
@@ -138,25 +152,28 @@ final class Build {
      *
      * @return string
      */
-    protected function getHelp(){
+    protected function getHelp() {
         $this->_isHelp = true;
-        $item = array();
+        $item          = array();
 
-        $item[] = ' +P  Model Class保存路径, 默认保存在work.php相应目录下的BuildResult文件夹下';
+        $item[] = ' +f  Model Class保存路径, 默认保存在work.php相应目录下的BuildResult文件夹下';
         $item[] = ' +e  Model Class父类， 默认 \Base\Model\AbstractModel (未开启命名空间，\'\\\' 以 \'_\' 代替)';
         $item[] = ' +x  Model Class文件后缀名, 默认 php';
-        $item[] = ' +l  Model Class文件名/类名是否保留下划线, 默认保留(1), 值[1,0]';
-        $item[] = ' +m  Model Class命名类型，1. %sModel  2. Model%s  3.%s_Model  4. Model_%s';
+        $item[] = ' +l  Model Class文件名/类名是否保留下划线, 默认 false';
+        $item[] = ' +L  Model Class方法名是否保留下划线, 默认 true';
+        $item[] = ' +m  Model Class命名类型, 默认 1，1. %sModel  2. Model%s  3.%s_Model  4. Model_%s';
         $item[] = ' +N  Model Class的命名空间，默认 \\';
-        $item[] = ' +o  是否开启命名空间[0, 1]， 默认 1';
-        $item[] = ' +d  需读取的数据库配置，默认 db';
+        $item[] = ' +o  是否开启命名空间， 默认 true';
+        $item[] = ' +d  从Config中读取的数据库配置，默认 false';
         $item[] = ' +T  设置N个空格替代一个TAB，为0时将以TAB出现,不替换, 默认 4';
         $item[] = ' +u  连接mysql用户名，使用此项 +d 将失效';
-        $item[] = ' +h  连接mysql主机，使用此项 +d 将失效';
         $item[] = ' +p  连接mysql密码，使用此项 +d 将失效';
+        $item[] = ' +h  连接mysql主机, 默认 127.0.0.1';
+        $item[] = ' +P  连接mysql主机端口, 默认 3306';
         $item[] = ' +n  连接mysql数据库名';
+        $item[] = ' +O  数据库驱动选项处理, 多个时用 \',\' 分隔';
         $item[] = ' +t  指定Build的表名，多个时用 \',\' 分隔';
-        $item[] = ' +v  显示详情[1-3]，默认 1';
+        $item[] = ' +v  显示详情[1-3]，默认 3';
         $item[] = ' +H  显示帮助';
 
         echo implode("\n", $item) . "\n";

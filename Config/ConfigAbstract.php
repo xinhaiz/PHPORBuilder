@@ -4,7 +4,7 @@ namespace Config;
 
 abstract class ConfigAbstract {
 
-    private $_config = null;
+    private $_config = array();
 
     final public function __construct() {
         $this->_config = $this->init();
@@ -22,6 +22,15 @@ abstract class ConfigAbstract {
 
     public function get($key = null, $default = null){
         return (isset($this->_config[$key])) ? $this->_config[$key] : ($default === true ? $this->_config : $default);
+    }
+
+    /**
+     * 获取所有配置
+     *
+     * @return array
+     */
+    public function getConfig() {
+        return $this->_config;
     }
 
     abstract public function init();

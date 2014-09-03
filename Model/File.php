@@ -69,7 +69,7 @@ final class File {
      */
     public function touchFile(){
         $options = \Lib\Options::getInstance();
-        $dir     = $options->getPath();
+        $dir     = $options->getFilepath();
 
         if (!file_exists($dir)) {
             mkdir($dir, 0755, true);

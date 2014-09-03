@@ -4,14 +4,14 @@ namespace Config;
 
 class Db extends \Config\ConfigAbstract {
 
-    // 不提供 options 配置， 如：SET NAMES ‘utf8’
-    // 程序默认处理了 SET NAMES ‘utf8’
     public function init() {
         return array(
             'host'     => '127.0.0.1',
-            'dbname'   => null,
+            'dbname'   => 'test',
             'username' => 'test',
-            'passwd'   => 'test'
+            'passwd'   => 'test',
+            'port'     => '3306',
+            'options'  => array("SET NAMES 'utf8'")
         );
     }
 
