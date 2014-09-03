@@ -157,7 +157,8 @@ final class Build {
         $item          = array();
 
         $item[] = ' +f  Model Class保存路径, 默认保存在work.php相应目录下的BuildResult文件夹下';
-        $item[] = ' +e  Model Class父类， 默认 \Base\Model\AbstractModel (未开启命名空间，\'\\\' 以 \'_\' 代替)';
+        $item[] = ' +e  Model Class父类 (未开启命名空间，\'\\\' 以 \'_\' 代替)';
+        $item[] = ' +i  Model Class类所需接口类 (未开启命名空间，\'\\\' 以 \'_\' 代替)';
         $item[] = ' +x  Model Class文件后缀名, 默认 php';
         $item[] = ' +l  Model Class文件名/类名是否保留下划线, 默认 false';
         $item[] = ' +L  Model Class方法名是否保留下划线, 默认 true';
@@ -167,7 +168,7 @@ final class Build {
         $item[] = ' +d  从Config中读取的数据库配置，默认 false';
         $item[] = ' +T  设置N个空格替代一个TAB，为0时将以TAB出现,不替换, 默认 4';
         $item[] = ' +u  连接mysql用户名，使用此项 +d 将失效';
-        $item[] = ' +p  连接mysql密码，使用此项 +d 将失效';
+        $item[] = ' +p  连接mysql密码，使用此项 +d 将失效, 不建议直接在命令行输入密码';
         $item[] = ' +h  连接mysql主机, 默认 127.0.0.1';
         $item[] = ' +P  连接mysql主机端口, 默认 3306';
         $item[] = ' +n  连接mysql数据库名';

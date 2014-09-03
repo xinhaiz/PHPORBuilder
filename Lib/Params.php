@@ -6,7 +6,7 @@ final class Params {
 
     protected static $_instance = null;
     protected $_argv     = null;
-    protected $_empty    = array('null', '0', 'false', 'true');
+    protected $_defBool  = array('false' => false, 'true' => true);
     protected $_state    = false;
     protected $_showHelp = false;
 
@@ -32,7 +32,7 @@ final class Params {
      * @return \Lib\Params
      */
     public function setParams($argv) {
-        $this->_argv  = (array) $argv;
+        $this->_argv  = (array)$argv;
         $this->_state = false;
 
         return $this;
@@ -76,8 +76,7 @@ final class Params {
             return false;
         }
 
-        $option         = null;
-        $optionInstance = \Lib\Options::getInstance();
+        $option = null;
 
         foreach ($this->_argv as $val) {
             if ($option === null) {
@@ -85,30 +84,58 @@ final class Params {
                 continue;
             }
 
+            if ($option === '+p') {
+                if(strpos($val, '+') === 0) {
+                    echo 'Enter password: ';
+                    $openHandle = fopen("php://stdin", "r+");
+                    $useInput   = trim(fread($openHandle, 256));
+                    fclose($openHandle);
+
+                    $this->setOption($option, $useInput);
+                    $option = $val;
+                    continue;
+                }
+            }
+
             if (mb_strlen($option) !== 2 || strpos($option, '+') !== 0) {
                 throw new \Lib\Exception('unknown option \'' . $option . '\'');
             }
 
-            $optionName = $optionInstance->getOptionsName(ord(trim($option, '+')));
-
-            if (empty($optionName)) {
-                throw new \Lib\Exception('unknown option \'' . $option . '\'');
-            }
-
-            $funcName = 'set' . ucfirst(strtolower($optionName));
-
-            if (method_exists($optionInstance, $funcName)) {
-                if (in_array($val, $this->_empty)) {
-                    $val = null;
-                }
-
-                $optionInstance->{$funcName}($val);
-            }
-
+            $this->setOption($option, $val);
             $option = null;
         }
 
         $this->_state = true;
+    }
+
+    /**
+     *
+     * @param type $option
+     * @param type $value
+     * @return boolean
+     * @throws \Lib\Exception
+     */
+    protected function setOption($option, $value) {
+        $optionInstance = \Lib\Options::getInstance();
+        $optionName     = $optionInstance->getOptionsName(ord(trim($option, '+')));
+
+        if (empty($optionName)) {
+            throw new \Lib\Exception('unknown option \'' . $option . '\'');
+        }
+
+        $funcName = 'set' . ucfirst(strtolower($optionName));
+
+        if (method_exists($optionInstance, $funcName)) {
+            if (isset($this->_defBool[$value])) {
+                $value = $this->_defBool[$value];
+            }
+
+            $optionInstance->{$funcName}($value);
+
+            return true;
+        }
+
+        return false;
     }
 
 }

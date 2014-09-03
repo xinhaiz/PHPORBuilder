@@ -8,6 +8,7 @@ final class Options {
     protected $_mapOptions = array(
         102 => 'filepath',     // +f
         101 => 'extendName',   // +e
+        105 => 'implements',   // +i
         120 => 'ext',          // +x
         108 => 'underline',    // +l
         76  => 'colunderline', // +L
@@ -28,6 +29,7 @@ final class Options {
 
     private $_filepath     = null;
     private $_extendName   = null;
+    private $_implements   = null;
     private $_modelType    = '%sModel';
     private $_ext          = '.php';
     private $_tab          = '    '; // 4空格
@@ -119,6 +121,33 @@ final class Options {
     }
 
     /**
+     * 类接口
+     *
+     * @param string $implements
+     * @return \Lib\Optioins
+     */
+    public function setImplements($implements){
+        $this->_implements = (string)$implements;
+
+        return $this;
+    }
+
+    /**
+     * 类接口
+     *
+     * @return string
+     */
+    public function getImplements(){
+        $implements = $this->_implements;
+
+        if($this->_onNamespace === false){
+            $implements = trim(str_replace('\\', '_', $implements), '_');
+        }
+
+        return $implements;
+    }
+
+    /**
      * 模型后缀格式
      *
      * @param string $modelType
@@ -158,11 +187,11 @@ final class Options {
     /**
      * 数据库配置
      *
-     * @param string $dbConfig
+     * @param string|false $dbConfig
      * @return \Lib\Options
      */
     public function setDbConfig($dbConfig){
-        $this->_dbConfig = ($dbConfig === '0' || $dbConfig === 'false' || $dbConfig === 'null') ? false : (string)$dbConfig;
+        $this->_dbConfig = ($dbConfig === false) ? false : (string)$dbConfig;
 
         return $this;
     }
@@ -397,7 +426,7 @@ final class Options {
      * @return \Lib\Options
      */
     public function setOnNamespace($onNamespace){
-        $this->_onNamespace = ($onNamespace === '0' || $onNamespace === 'false' || $onNamespace === 'null') ? false : (bool)$onNamespace;
+        $this->_onNamespace = (bool)$onNamespace;
 
         return $this;
     }
@@ -447,7 +476,7 @@ final class Options {
      * @return \Lib\Options
      */
     public function setUnderline($underline){
-        $this->_underline = ($underline === '0' || $underline === 'false' || $underline === 'null') ? false : (bool)$underline;
+        $this->_underline = (bool)$underline;
 
         return $this;
     }
@@ -468,7 +497,7 @@ final class Options {
      * @return \Lib\Options
      */
     public function setColunderline($colunderline){
-        $this->_colunderline = ($colunderline === '0' || $colunderline === 'false' || $colunderline === 'null') ? false : (bool)$colunderline;
+        $this->_colunderline = (bool)$colunderline;
 
         return $this;
     }

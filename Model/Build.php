@@ -38,6 +38,10 @@ final class Build {
             $items[] = ' extends ' . $options->getExtendName();
         }
 
+        if (!empty($options->getImplements())) {
+            $items[] = ' implements ' . $options->getImplements();
+        }
+
         $items[] = " {\n";
 
         return implode('', $items);
