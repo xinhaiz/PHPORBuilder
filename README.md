@@ -1,31 +1,51 @@
-# Gorm
+# Gorm v1.0.0 Beta
 一个快速构建PHP ORM类的工具
 
 ## Requirement
 - PHP 5.4 + (PDO support)
-- Linux Shell / Windown cmd (window 未测试)
+- Linux Shell / Windown cmd
 
-## Command
-- `+f`  Model Class保存路径, 默认保存在work.php相应目录下的BuildResult文件夹下';
-- `+e`  Model Class父类 (未开启命名空间，\'\\\' 以 \'_\' 代替)';
-- `+i`  Model Class类所需接口类 (未开启命名空间，\'\\\' 以 \'_\' 代替)';
-- `+x`  Model Class文件后缀名, 默认 php';
-- `+l`  Model Class文件名/类名是否保留下划线, 默认 false';
-- `+L`  Model Class方法名是否保留下划线, 默认 true';
-- `+m`  Model Class命名类型, 默认 1，1. %sModel  2. Model%s  3.%s_Model  4. Model_%s';
-- `+N`  Model Class的命名空间，默认 \\';
-- `+o`  是否开启命名空间， 默认 true';
-- `+d`  从Config中读取的数据库配置，默认 false';
-- `+T`  设置N个空格替代一个TAB，为0时将以TAB出现,不替换, 默认 4';
-- `+u`  连接mysql用户名，使用此项 +d 将失效';
-- `+p`  连接mysql密码，使用此项 +d 将失效, 不建议直接在命令行输入密码';
-- `+h`  连接mysql主机, 默认 127.0.0.1';
-- `+P`  连接mysql主机端口, 默认 3306';
-- `+n`  连接mysql数据库名';
-- `+O`  数据库驱动选项处理, 多个时用 \',\' 分隔';
-- `+t`  指定Build的表名，多个时用 \',\' 分隔';
-- `+v`  显示详情[1-3]，默认 3';
-- `+H`  显示帮助';
+## Last ChangeLog [2014-09-03]
+- 1. 定义此次版本为 v1.0.0 Beta
+- 2. 取消了Model Class父类的默认值
+- 3. 取消了从Config中读取的数据库配置的默认值
+- 4. 调整Model Class保存路径选项 `+P` 为 `+f`, 选项 `+P` 另有用途
+- 5. 调整了命名空间开启默认值为 `true`
+- 6. 调整Model Class文件名/类名是保留下划线默认值为 `false`
+- 7. 调整MySQL主机地址默认值为 `127.0.0.1`
+- 8. 调整MySQL主机端口默认值为 `3306`
+- 9. 调整显示详情的默认等级为 3
+- 10. 选项 `+h` 不再影响 `+d` 选项
+- 11. 增加对接口类写入Model Class类的支持
+- 12. 增加Model Class方法名是否保留下划线支持, 默认为 `true`
+- 13. 增加MySQL Port自定义支持, 配置选项为 `+P`
+- 14. 增加MySQL数据库驱动选项处理支持, 配置选项为 `+O`
+- 15. 增加MySQL使用选项 `+p` 流输入支持, 并且建议使用此方式
+- 16. 更改类名的合法检测, 将保证类名以[A-Z]任一字母开头
+- 17. 更新 `+H` 选项相应的输出说明
+- 18. 其它小细节调整及测试
+
+## Command [区分大小写]
+- `+f`  Model Class保存路径, 默认保存在gorm.php相应目录下的BuildResult文件夹下;
+- `+e`  Model Class父类 (未开启命名空间，\'\\\' 以 \'_\' 代替);
+- `+i`  Model Class类所需接口类 (未开启命名空间，\'\\\' 以 \'_\' 代替);
+- `+x`  Model Class文件后缀名, 默认 php;
+- `+l`  Model Class文件名/类名是否保留下划线, 默认 false;
+- `+L`  Model Class方法名是否保留下划线, 默认 true;
+- `+m`  Model Class命名类型, 默认 1，1. %sModel  2. Model%s  3.%s_Model  4. Model_%s;
+- `+N`  Model Class的命名空间，默认 \\;
+- `+o`  是否开启命名空间， 默认 true;
+- `+d`  从Config中读取的数据库配置，默认 false;
+- `+T`  设置N个空格替代一个TAB，为0时将以TAB出现,不替换, 默认 4;
+- `+u`  连接mysql用户名，使用此项 +d 将失效;
+- `+p`  连接mysql密码，使用此项 +d 将失效, 不建议直接在命令行输入密码;
+- `+h`  连接mysql主机, 默认 127.0.0.1;
+- `+P`  连接mysql主机端口, 默认 3306;
+- `+n`  连接mysql数据库名;
+- `+O`  数据库驱动选项处理, 多个时用 \',\' 分隔;
+- `+t`  指定Build的表名，多个时用 \',\' 分隔;
+- `+v`  显示详情[1-3]，默认 3;
+- `+H`  显示帮助;
 
 ## Example
 
@@ -48,14 +68,14 @@ php -f gorm.php +P /home/gsinhi/testOrm +o 0
 ```php
 namespace Config;
 class Db extends \Config\ConfigAbstract {
-    // 不提供 options 配置， 如：SET NAMES ‘utf8’
-    // 程序默认处理了 SET NAMES ‘utf8’
     public function init() {
         return array(
-            'host'     => 'localhost',
-            'dbname'   => 'test_orm',
+            'host'     => '127.0.0.1',
+            'dbname'   => 'test',
             'username' => 'test',
-            'passwd'   => '123456'
+            'passwd'   => 'test',
+            'port'     => '3306',
+            'options'  => array("SET NAMES 'utf8'")
         );
     }
 }
