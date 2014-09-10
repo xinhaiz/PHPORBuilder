@@ -58,17 +58,17 @@
 
 - 指定保存路径
 ```php
-php -f gorm.php +P /home/gsinhi/testOrm +v 1
+php -f gorm.php +f /home/gsinhi/testOrm +v 1
 ```
 
 - 指定数据库
 ```php
-php -f gorm.php +P /home/gsinhi/testOrm +u test +h localhost +p 123456 +n test_orm +v 3
+php -f gorm.php +f /home/gsinhi/testOrm +u test +h localhost +p 123456 +n test_orm +v 3
 ```
 
 - 关闭命名空间
 ```php
-php -f gorm.php +P /home/gsinhi/testOrm +o 0
+php -f gorm.php +f /home/gsinhi/testOrm +o 0
 ```
 
 - 示例配置 Config/Db.php
