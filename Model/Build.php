@@ -3,8 +3,9 @@
 namespace Model;
 
 final class Build {
+
     protected static $_instance = null;
-    private $_tab = null;
+    private $_tab               = null;
 
     private function __construct() {
         $this->_tab = \Lib\Options::getInstance()->getTab();
@@ -23,7 +24,6 @@ final class Build {
         return self::$_instance;
     }
 
-
     /**
      * 创建类名
      *
@@ -31,8 +31,9 @@ final class Build {
      * @return string
      */
     public function toClass($name) {
-        $options = \Lib\Options::getInstance();
-        $items   = array('class ' . sprintf($options->getModelType(), ucfirst($name)));
+        $options  = \Lib\Options::getInstance();
+        $finalCls = $options->getFinal() === true ? 'final ' : '';
+        $items   = array($finalCls . 'class ' . sprintf($options->getModelType(), ucfirst($name)));
 
         if (!empty($options->getExtendName())) {
             $items[] = ' extends ' . $options->getExtendName();
@@ -58,7 +59,7 @@ final class Build {
         $items    = array($this->_tab . '/**');
 
         foreach ($comments as $comment) {
-            $items[] = $this->_tab. ' * ' . $comment;
+            $items[] = $this->_tab . ' * ' . $comment;
         }
 
         $items[] = $this->_tab . ' */';
@@ -127,20 +128,26 @@ final class Build {
      * @return string
      */
     public function toToArray(array $sets) {
-        $items = array(str_repeat($this->_tab, 2) . 'return array(');
-        $citem = array();
+        $items  = array(str_repeat($this->_tab, 2) . 'return array(');
+        $citem  = array();
+        $lenArr = array_map(function($name){
+            return mb_strlen($name);
+        }, $sets);
+
+        sort($lenArr);
+        $maxLen = array_pop($lenArr) + 1;
 
         foreach ($sets as $name) {
-            $citem[] = str_repeat($this->_tab, 3) . "'" . $name . "' => \$this->_" . $name;
+            $len = $maxLen - mb_strlen($name);
+            $citem[] = str_repeat($this->_tab, 3) . '\'' . $name . '\'' . str_repeat(' ', $len) . '=> $this->_' . $name;
         }
 
         $items[] = implode(',' . "\n", $citem);
         unset($citem);
 
-        $items[] = str_repeat($this->_tab, 2) . ");\n";
+        $items[] = str_repeat($this->_tab, 2) . ");";
 
         return $this->toFunc('toArray', $items);
     }
-
 
 }

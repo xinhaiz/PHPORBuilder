@@ -86,7 +86,8 @@ final class Content {
         $namespace = ltrim(trim($options->getNamespace(), '\\'), '_');
 
         if (!empty($namespace) && $options->getOnNamespace() === true) {
-            $buffer->pushHeader('namespace ' . $namespace . ';' . "\n");
+            $buffer->pushHeader('namespace ' . $namespace . ';');
+            $buffer->pushHeader(''); // 增加一空行,处理代码格式
             $namespace = '';
         }
 
@@ -106,6 +107,7 @@ final class Content {
             $items[] = $colName;
         }
 
+        $buffer->pushToArray($build->toComment(array('Return a array of model properties', '', '@return array')));
         $buffer->pushToArray($build->toToArray($items));
     }
 
@@ -115,32 +117,17 @@ final class Content {
      * @param \Model\Columnstruct $struct
      */
     private function parseColumn(\Model\Columnstruct $struct) {
-        $options = \Lib\Options::getInstance();
-        $name    = $struct->getColumn_name();
+        $name = $struct->getColumn_name();
 
-        if ($options->getColunderline() === false) {
+        if (\Lib\Options::getInstance()->getColunderline() === false) {
             $name = trim(str_replace('_', '', $name));
         }
 
-        $extra      = $struct->getExtra();
-        $key        = $struct->getColumn_key();
-        $commentArr = array();
+        $commentArr = $this->buildCommonComments($struct);
 
-        $commentArr[] = $struct->getColumn_comment();
-        $commentArr[] = '';
-        $commentArr[] = $struct->getColumn_type();
-
-        if (!empty($extra)) {
-            $commentArr[] = $extra;
-        }
-
-        if (!empty($key)) {
-            $commentArr[] = $key;
-        }
-
-        $this->buildPropertyContent($commentArr, $struct);
-        $this->buildSetfuncContent($commentArr, $struct);
-        $this->buildGetfuncContent($commentArr, $struct);
+        $this->buildPropertyContent($struct, $commentArr);
+        $this->buildSetfuncContent($struct, $commentArr);
+        $this->buildGetfuncContent($struct, $commentArr);
 
         return true;
     }
@@ -182,64 +169,92 @@ final class Content {
     /**
      * 创建属性内容
      *
-     * @param array $commentArr
      * @param \Model\Columnstruct $struct
+     * @param array $commentArr
      */
-    protected function buildPropertyContent(array $commentArr, \Model\Columnstruct $struct) {
-        $build = \Model\Build::getInstance();
+    protected function buildPropertyContent(\Model\Columnstruct $struct, array $commentArr) {
+        $build  = \Model\Build::getInstance();
+        $buffer = \Model\Buffer::getInstance();
 
-        $commentArr[] = '';
         $commentArr[] = '@var ' . $this->getDateType($struct->getData_type());
 
-        \Model\Buffer::getInstance()->pushProperty(implode("\n", array(
-            $build->toComment($commentArr),
-            $build->toProperty('_' . $struct->getColumn_name(), $struct->getColumn_default())
-        )));
+        $buffer->pushProperty($build->toComment($commentArr));
+        $buffer->pushProperty($build->toProperty('_' . $struct->getColumn_name(), $struct->getColumn_default()));
     }
 
     /**
      * 创建set方法内容
      *
-     * @param array $commentArr
      * @param \Model\Columnstruct $struct
+     * @param array $commentArr
      */
-    protected function buildSetfuncContent(array $commentArr, \Model\Columnstruct $struct) {
+    protected function buildSetfuncContent(\Model\Columnstruct $struct, array $commentArr) {
         $build    = \Model\Build::getInstance();
+        $buffer   = \Model\Buffer::getInstance();
         $options  = \Lib\Options::getInstance();
         $name     = $struct->getColumn_name();
         $dataType = $this->getDateType($struct->getData_type());
 
-        $commentArr[] = '';
         $commentArr[] = '@param ' . $dataType . ' $' . $name;
         $commentArr[] = '@return ' . ltrim($options->getNamespace(), '_')
                 . sprintf($options->getModelType(), ucfirst($this->_tableName));
 
-        \Model\Buffer::getInstance()->pushFunc(implode("\n", array(
-            $build->toComment($commentArr),
-            $build->toSetFunc($name, array(
-                str_repeat($this->_tab, 2) . '$this->_' . $name . ' = (' . $dataType . ')$' . $name . ';' . "\n",
-                str_repeat($this->_tab, 2) . 'return $this;'
-                    ), $name)
-        )));
+        $buffer->pushFunc($build->toComment($commentArr));
+        $buffer->pushFunc($build->toSetFunc($name, array(
+            str_repeat($this->_tab, 2) . '$this->_' . $name . ' = (' . $dataType . ')$' . $name . ';',
+            '',
+            str_repeat($this->_tab, 2) . 'return $this;'
+        ), $name));
     }
 
     /**
      * 创建get方法内容
      *
-     * @param array $commentArr
      * @param \Model\Columnstruct $struct
+     * @param array $commentArr
      */
-    protected function buildGetfuncContent(array $commentArr, \Model\Columnstruct $struct) {
-        $build = \Model\Build::getInstance();
-        $name  = $struct->getColumn_name();
+    protected function buildGetfuncContent(\Model\Columnstruct $struct, array $commentArr) {
+        $build  = \Model\Build::getInstance();
+        $buffer = \Model\Buffer::getInstance();
+        $name   = $struct->getColumn_name();
 
-        $commentArr[] = '';
         $commentArr[] = '@return ' . $this->getDateType($struct->getData_type());
 
-        \Model\Buffer::getInstance()->pushFunc(implode("\n", array(
-            $build->toComment($commentArr),
-            $build->toGetFunc($name, array(str_repeat($this->_tab, 2) . 'return $this->_' . $name . ';'))
-        )));
+        $buffer->pushFunc($build->toComment($commentArr));
+        $buffer->pushFunc($build->toGetFunc($name, array(str_repeat($this->_tab, 2) . 'return $this->_' . $name . ';')));
+    }
+
+    /**
+     * 创建公共注释部分
+     *
+     * @param \Model\Columnstruct $struct
+     * @return array
+     */
+    protected function buildCommonComments(\Model\Columnstruct $struct) {
+        $extra      = $struct->getExtra();
+        $key        = $struct->getColumn_key();
+        $default    = $struct->getColumn_default();
+        $commentArr = array();
+
+        $commentArr[] = $struct->getColumn_comment();
+        $commentArr[] = '';
+        $commentArr[] = 'Column Type: ' . $struct->getColumn_type();
+
+        if (mb_strlen($default) > 0) {
+            $commentArr[] = 'Default: ' . $struct->getColumn_default();
+        }
+
+        if (!empty($extra)) {
+            $commentArr[] = $extra;
+        }
+
+        if (!empty($key)) {
+            $commentArr[] = $key;
+        }
+
+        $commentArr[] = '';
+
+        return $commentArr;
     }
 
     /**

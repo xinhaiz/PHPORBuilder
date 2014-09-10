@@ -29,7 +29,7 @@ final class Columnstruct {
      * @return \Model\Columns
      */
     public function setColumn_name($column_name) {
-        $this->_column_name = (string)$column_name;
+        $this->_column_name = $column_name;
 
         return $this;
     }
@@ -50,7 +50,7 @@ final class Columnstruct {
      * @return \Model\Columns
      */
     public function setColumn_type($column_type) {
-        $this->_column_type = (string)$column_type;
+        $this->_column_type = $column_type;
 
         return $this;
     }
@@ -71,7 +71,7 @@ final class Columnstruct {
      * @return \Model\Columns
      */
     public function setColumn_default($column_default) {
-        $this->_column_default = (string)$column_default;
+        $this->_column_default = $column_default;
 
         return $this;
     }
@@ -92,7 +92,7 @@ final class Columnstruct {
      * @return \Model\Columns
      */
     public function setColumn_comment($column_comment) {
-        $this->_column_comment = (string)$column_comment;
+        $this->_column_comment = $column_comment;
 
         return $this;
     }
@@ -119,7 +119,7 @@ final class Columnstruct {
      * @return \Model\Columns
      */
     public function setColumn_key($column_key) {
-        $this->_column_key = (string)$column_key;
+        $this->_column_key = $column_key;
 
         return $this;
     }
@@ -140,7 +140,7 @@ final class Columnstruct {
      * @return \Model\Columns
      */
     public function setExtra($extra) {
-        $this->_extra = (string)$extra;
+        $this->_extra = $extra;
 
         return $this;
     }
@@ -162,7 +162,7 @@ final class Columnstruct {
      */
     public function setData_type($data_type) {
         if(!empty($data_type)) {
-            $this->_data_type = (string)$data_type;
+            $this->_data_type = $data_type;
         }
 
         return $this;

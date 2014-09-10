@@ -5,7 +5,13 @@
 - PHP 5.4 + (PDO support)
 - Linux Shell / Windown cmd
 
-## Last ChangeLog [2014-09-03]
+## Last ChangeLog [2014-09-10]
+- 增加选项 `+F`, 使Model类能支持写 `final` 关键字, 默认 false
+- 字段解析相关代码大幅调整, 包括代码/代码结构, 缓冲区处理, 输出内容等
+- 现在工具将自动格式化 `toArray` 类方法的代码内容(以空格符计算), 不需要手动处理
+- 其它小细节调整
+
+## ChangeLog [2014-09-03]
 - 定义此次版本为 v1.0.0 Beta
 - 取消了Model Class父类的默认值
 - 取消了从Config中读取的数据库配置的默认值
@@ -26,26 +32,27 @@
 - 其它小细节调整及测试
 
 ## Command [区分大小写]
-- `+f`  Model Class保存路径, 默认保存在gorm.php相应目录下的BuildResult文件夹下;
-- `+e`  Model Class父类 (未开启命名空间，\'\\\' 以 \'_\' 代替);
-- `+i`  Model Class类所需接口类 (未开启命名空间，\'\\\' 以 \'_\' 代替);
-- `+x`  Model Class文件后缀名, 默认 php;
-- `+l`  Model Class文件名/类名是否保留下划线, 默认 false;
-- `+L`  Model Class方法名是否保留下划线, 默认 true;
-- `+m`  Model Class命名类型, 默认 1，1. %sModel  2. Model%s  3.%s_Model  4. Model_%s;
-- `+N`  Model Class的命名空间，默认 \\;
-- `+o`  是否开启命名空间， 默认 true;
-- `+d`  从Config中读取的数据库配置，默认 false;
-- `+T`  设置N个空格替代一个TAB，为0时将以TAB出现,不替换, 默认 4;
-- `+u`  连接mysql用户名，使用此项 +d 将失效;
-- `+p`  连接mysql密码，使用此项 +d 将失效, 不建议直接在命令行输入密码;
-- `+h`  连接mysql主机, 默认 127.0.0.1;
-- `+P`  连接mysql主机端口, 默认 3306;
-- `+n`  连接mysql数据库名;
-- `+O`  数据库驱动选项处理, 多个时用 \',\' 分隔;
-- `+t`  指定Build的表名，多个时用 \',\' 分隔;
-- `+v`  显示详情[1-3]，默认 3;
-- `+H`  显示帮助;
+- `+f`  Model Class保存路径, 默认保存在gorm.php相应目录下的BuildResult文件夹下
+- `+e`  Model Class父类 (未开启命名空间，\'\\\' 以 \'_\' 代替)
+- `+i`  Model Class类所需接口类 (未开启命名空间，\'\\\' 以 \'_\' 代替)
+- `+x`  Model Class文件后缀名, 默认 php
+- `+l`  Model Class文件名/类名是否保留下划线, 默认 false
+- `+L`  Model Class方法名是否保留下划线, 默认 true
+- `+m`  Model Class命名类型, 默认 1，1. %sModel  2. Model%s  3.%s_Model  4. Model_%s
+- `+N`  Model Class的命名空间，默认 \\
+- `+F`  Model Class能支持写 `final` 关键字, 默认 false
+- `+o`  是否开启命名空间， 默认 true
+- `+d`  从Config中读取的数据库配置，默认 false
+- `+T`  设置N个空格替代一个TAB，为0时将以TAB出现,不替换, 默认 4
+- `+u`  连接mysql用户名，使用此项 +d 将失效
+- `+p`  连接mysql密码，使用此项 +d 将失效, 不建议直接在命令行输入密码
+- `+h`  连接mysql主机, 默认 127.0.0.1
+- `+P`  连接mysql主机端口, 默认 3306
+- `+n`  连接mysql数据库名
+- `+O`  数据库驱动选项处理, 多个时用 \',\' 分隔
+- `+t`  指定Build的表名，多个时用 \',\' 分隔
+- `+v`  显示详情[1-3]，默认 3
+- `+H`  显示帮助
 
 ## Example
 

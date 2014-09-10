@@ -6,10 +6,10 @@ final class Buffer {
 
     protected static $_instance = null;
     private $_header   = array("<?php\n");
-    private $_class    = null;
-    private $_property = null;
-    private $_func     = null;
-    private $_toArray  = null;
+    private $_class    = array();
+    private $_property = array();
+    private $_func     = array();
+    private $_toArray  = array();
     private $_end      = "}\n";
 
     public function __construct() {}
@@ -34,10 +34,10 @@ final class Buffer {
      */
     public function clearAll(){
         $this->_header   = array("<?php\n");
-        $this->_class    = null;
-        $this->_property = null;
-        $this->_func     = null;
-        $this->_toArray  = null;
+        $this->_class    = array();
+        $this->_property = array();
+        $this->_func     = array();
+        $this->_toArray  = array();
 
         return true;
     }
@@ -64,24 +64,24 @@ final class Buffer {
     }
 
     /**
-     * 类行（only one）
+     * 类行
      *
      * @param string $class
      * @return \Model\Buffer
      */
     public function pushClass($class){
-        $this->_class = (string)$class;
+        $this->_class[] = (string)$class;
 
         return $this;
     }
 
     /**
-     * 类行（only one）
+     * 类行
      *
      * @return string
      */
     public function pullClass(){
-        return $this->_class;
+        return implode("\n", $this->_class);
     }
 
     /**
@@ -133,7 +133,7 @@ final class Buffer {
      * @return \Model\Buffer
      */
     public function pushToArray($toArray){
-        $this->_toArray = (string)$toArray;
+        $this->_toArray[] = (string)$toArray;
 
         return $this;
     }
@@ -144,7 +144,7 @@ final class Buffer {
      * @return string
      */
     public function pullToArray(){
-        return $this->_toArray;
+        return implode("\n", $this->_toArray);
     }
 
     /**

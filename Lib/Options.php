@@ -14,6 +14,7 @@ final class Options {
         76  => 'colunderline', // +L
         109 => 'modelType',    // +m
         78  => 'namespace',    // +N
+        70  => 'final',        // +F
         111 => 'onNamespace',  // +o
         100 => 'dbConfig',     // +d
         84  => 'tab',          // +T
@@ -35,6 +36,7 @@ final class Options {
     private $_tab          = '    '; // 4空格
     private $_view         = 3;
     private $_namespace    = '\\';
+    private $_final        = false;
     private $_underline    = false;
     private $_colunderline = true;
     private $_onNamespace  = true;
@@ -467,6 +469,27 @@ final class Options {
         }
 
         return $namespace;
+    }
+
+    /**
+     * 是否是final类
+     *
+     * @param boolean $final
+     * @return \Lib\Options
+     */
+    public function setFinal($final){
+        $this->_final = (bool)$final;
+
+        return $this;
+    }
+
+    /**
+     * 是否是final类
+     *
+     * @return string
+     */
+    public function getFinal(){
+        return $this->_final;
     }
 
     /**
