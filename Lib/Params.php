@@ -87,11 +87,17 @@ final class Params {
             if ($option === '+p') {
                 if(strpos($val, '+') === 0) {
                     echo 'Enter password: ';
-                    $openHandle = fopen("php://stdin", "r+");
-                    $useInput   = trim(fread($openHandle, 256));
-                    fclose($openHandle);
 
-                    $this->setOption($option, $useInput);
+                    if(strcasecmp(PHP_OS, 'linux') === 0) {
+                        $passwd = shell_exec('stty -echo && read password && stty echo && echo $password');
+                        echo "\n";
+                    } else {
+                        $openHandle = fopen("php://stdin", "r+");
+                        $passwd   = trim(fread($openHandle, 256));
+                        fclose($openHandle);
+                    }
+
+                    $this->setOption($option, trim($passwd));
                     $option = $val;
                     continue;
                 }
