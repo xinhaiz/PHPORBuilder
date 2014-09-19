@@ -29,7 +29,7 @@ class Db {
         }
 
         if (!isset($pdo) || !$pdo instanceof \PDO) {
-            throw new \Lib\Exception('connection failed');
+            throw new \Lib\Exception('connection failed.' . "\n" . $dbConfig->toString());
         }
 
         $options = $dbConfig->getOptions();

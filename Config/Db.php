@@ -6,10 +6,10 @@ class Db extends \Config\ConfigAbstract {
 
     public function init() {
         return array(
-            'host'     => '127.0.0.1',
+            'host'     => 'db.gitxm.com',
             'dbname'   => 'test',
-            'username' => 'test',
-            'passwd'   => 'test',
+            'username' => 'root',
+            'passwd'   => '103188',
             'port'     => '3306',
             'options'  => array("SET NAMES 'utf8'")
         );

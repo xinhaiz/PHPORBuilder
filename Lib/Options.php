@@ -41,7 +41,7 @@ final class Options {
     private $_colunderline = true;
     private $_onNamespace  = true;
     private $_dbConfig     = null;
-    private $_host         = '127.0.0.1';
+    private $_host         = null;
     private $_username     = null;
     private $_passwd       = null;
     private $_port         = 3306;

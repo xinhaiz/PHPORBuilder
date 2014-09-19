@@ -97,6 +97,8 @@ final class Build {
             $st->show('done', 2);
         }
 
+        $st->show("\n" . \Lib\DbConfig::getInstance()->toString(), 4);
+
         return true;
     }
 
@@ -111,31 +113,35 @@ final class Build {
             $dbConfig = \Lib\DbConfig::getInstance();
             $userName = $options->getUsername();
             $passwd   = $options->getPasswd();
+            $confName = (empty($userName) || empty($passwd)) ? $options->getDbConfig() : false;
+            $params   = array('host', 'dbname', 'port', 'options');
 
-            if (empty($userName) && empty($passwd) || $options->getDbConfig() === false) {
-                $configCls = '\\Config\\' . ucfirst(strtolower($options->getDbConfig()));
-                $config    = new $configCls();
+            if (!empty($confName)) {
+                $predefined = '\\Config\\' . ucfirst(strtolower($confName));
+                $preConfig  = new $predefined();
 
-                if ($config instanceof \Config\ConfigAbstract) {
-                    foreach ($config->getConfig() as $key => $value) {
-                        $set = 'set' . ucfirst(strtolower($key));
-
-                        if(method_exists($config, $set) && !empty($value)) {
-                            $dbConfig->{$set}($value);
-                        }
-                    }
+                if ($preConfig instanceof \Config\ConfigAbstract) {
+                    $dbConfig->setHost($preConfig->get('host'));
+                    $dbConfig->setPort($preConfig->get('port'));
+                    $dbConfig->setDbname($preConfig->get('dbname'));
+                    $dbConfig->setOptions($preConfig->get('options'));
+                    $dbConfig->setUsername($preConfig->get('username'));
+                    $dbConfig->setPasswd($preConfig->get('passwd'));
                 }
             } else {
-                foreach(array('host', 'username', 'port', 'dbname', 'passwd', 'port', 'options') as $name) {
-                    $get = 'get' . ucfirst(strtolower($name));
+                array_push($params, 'username');
+                array_push($params, 'passwd');
+            }
 
-                    if(method_exists($options, $get)) {
-                        $val = $options->{$get}();
-                        $set = 'set' . ucfirst(strtolower($name));
+            foreach ($params as $name) {
+                $get = 'get' . ucfirst(strtolower($name));
 
-                        if(!empty($val) && method_exists($dbConfig, $set)) {
-                            $dbConfig->{$set}($val);
-                        }
+                if (method_exists($options, $get)) {
+                    $val = $options->{$get}();
+                    $set = 'set' . ucfirst(strtolower($name));
+
+                    if (!empty($val) && method_exists($dbConfig, $set)) {
+                        $dbConfig->{$set}($val);
                     }
                 }
             }

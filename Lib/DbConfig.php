@@ -9,12 +9,11 @@ final class DbConfig {
     private function __clone() {}
     private function __sleep() {}
 
-    private $_host     = null;
+    private $_host     = '127.0.0.1';
     private $_username = null;
     private $_passwd   = null;
-    private $_port     = null;
+    private $_port     = '3306';
     private $_dbname   = null;
-    private $_table    = null;
     private $_options  = array();
 
     /**
@@ -70,27 +69,6 @@ final class DbConfig {
      */
     public function getDbname(){
         return $this->_dbname;
-    }
-
-    /**
-     * 需要操作的表名
-     *
-     * @param string $table
-     * @return \Lib\DbConfig
-     */
-    public function setTable($table){
-        $this->_table = explode(',', $table);
-
-        return $this;
-    }
-
-    /**
-     * 需要操作的表名
-     *
-     * @return array()
-     */
-    public function getTable(){
-        return $this->_table;
     }
 
     /**
@@ -189,5 +167,19 @@ final class DbConfig {
     public function getDsn() {
         return 'mysql:host=' . $this->_host . ':' . $this->_port . ';dbname=' . $this->_dbname;
     }
-}
 
+    public function toString() {
+        $ret = array();
+        $ret[] = '--------------------------';
+        $ret[] = 'connection information:';
+        $ret[] = '    host: ' . $this->_host;
+        $ret[] = 'username: ' . $this->_username;
+        $ret[] = 'password: ' . str_repeat('*', mb_strlen($this->_passwd));
+        $ret[] = '    port: ' . $this->_port;
+        $ret[] = '  dbname: ' . $this->_dbname;
+        $ret[] = ' options: ' . implode(' ', $this->_options);
+        $ret[] = '--------------------------';
+
+        return implode("\n", $ret);
+    }
+}
