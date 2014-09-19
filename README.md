@@ -64,6 +64,7 @@ class Db extends \Config\ConfigAbstract {
     }
 }
 ```
+
 ## ChangeLog
 `[2014-09-10]`
 - 增加选项 `+F`, 使Model类能支持写 `final` 关键字, 默认 false
