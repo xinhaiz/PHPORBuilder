@@ -7,6 +7,8 @@
 
 ## Last ChangeLog [2014-09-18]
 - Linux 平台下输入密码不再回显
+- 修复多个Bug
+- 一些小细节调整
 
 ## Command [区分大小写]
 - `+f`  Model Class保存路径, 默认保存在gorm.php相应目录下的BuildResult文件夹下
