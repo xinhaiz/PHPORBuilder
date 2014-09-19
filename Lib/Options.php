@@ -44,7 +44,7 @@ final class Options {
     private $_host         = null;
     private $_username     = null;
     private $_passwd       = null;
-    private $_port         = 3306;
+    private $_port         = null;
     private $_dbname       = null;
     private $_options      = array("SET NAMES 'utf8'");
     private $_table        = null;

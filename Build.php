@@ -181,7 +181,7 @@ final class Build {
         $item[] = ' +n  连接mysql数据库名';
         $item[] = ' +O  数据库驱动选项处理, 多个时用 \',\' 分隔';
         $item[] = ' +t  指定Build的表名，多个时用 \',\' 分隔';
-        $item[] = ' +v  显示详情[1-3]，默认 3';
+        $item[] = ' +v  显示详情[1-4]，默认 3';
         $item[] = ' +H  显示帮助';
 
         echo implode("\n", $item) . "\n";
