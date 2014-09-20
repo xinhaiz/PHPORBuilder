@@ -8,7 +8,6 @@ final class Content {
     private $_columns           = null;
     private $_tableName         = null;
     private $_tab               = null;
-    private $_viewLevel         = 3;
 
     /**
      * 未在配置内的将默认为 string
@@ -101,9 +100,9 @@ final class Content {
                 continue;
             }
 
-            $status->show('being parsed column [' . $colName . ']', $this->_viewLevel);
-            $result  = $this->parseColumn($struct);
-            $status->show($result === true ? 'ok' : 'failed', $this->_viewLevel);
+            $result = $this->parseColumn($struct);
+            ($result === false) ? $status->warning('Parse failed') : $status->notic('Parsed [' . $colName . ']...  done');
+
             $items[] = $colName;
         }
 
@@ -143,22 +142,21 @@ final class Content {
         $options = \Lib\Options::getInstance();
 
         $items   = array();
-        $status->show('building php head', $this->_viewLevel);
+        $status->notic('Building php head');
         $items[] = $buffer->pullHeader();
 
         $namespace = ($options->getOnNamespace() === false) ? $options->getNamespace() : '';
 
-        $status->show('building class [' . $namespace . sprintf($options->getModelType(), ucfirst($this->_tableName)) . ']', $this->_viewLevel);
+        $status->notic('Building class [' . $namespace . sprintf($options->getModelType(), ucfirst($this->_tableName)) . ']');
         $items[] = $buffer->pullClass();
 
-        $status->show('building class property', $this->_viewLevel);
+        $status->notic('Building class property');
         $items[] = $buffer->pullProperty();
 
-        $status->show('building class function', $this->_viewLevel);
+        $status->notic('Building class function');
         $items[] = $buffer->pullFunc();
         $items[] = $buffer->pullToArray();
 
-        $status->show('ending', $this->_viewLevel);
         $items[] = $buffer->pullEnd();
 
         $buffer->clearAll();

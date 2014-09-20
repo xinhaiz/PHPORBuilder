@@ -24,8 +24,7 @@ final class Options {
         110 => 'dbname',       // +n
         80  => 'port',         // +P
         79  => 'options',      // +O
-        116 => 'table',        // +t
-        118 => 'view'          // +v
+        116 => 'table'         // +t
       );
 
     private $_filepath     = null;
@@ -34,7 +33,6 @@ final class Options {
     private $_modelType    = '%sModel';
     private $_ext          = '.php';
     private $_tab          = '    '; // 4空格
-    private $_view         = 3;
     private $_namespace    = '\\';
     private $_final        = false;
     private $_underline    = false;
@@ -398,27 +396,6 @@ final class Options {
      */
     public function getOptions(){
         return $this->_options;
-    }
-
-    /**
-     * 是否查看building状态
-     *
-     * @param string $view
-     * @return \Lib\Options
-     */
-    public function setView($view){
-        $this->_view = (int)$view;
-
-        return $this;
-    }
-
-    /**
-     * 是否查看building状态
-     *
-     * @return string
-     */
-    public function getView(){
-        return (int)$this->_view;
     }
 
     /**

@@ -17,6 +17,6 @@ class Exception extends \Exception {
     }
 
     public function errorHandle(){
-        echo '[error] ' . $this->_message . "\n";
+        echo $this->_message . "\n";
     }
 }

@@ -5,10 +5,10 @@
 - PHP 5.4 + (PDO support)
 - Linux Shell / Windown cmd
 
-## Last ChangeLog [2014-09-18]
-- Linux 平台下输入密码不再回显
-- 修复多个Bug
-- 一些小细节调整
+## Last ChangeLog [2014-09-20]
+- 重新调整Building Status相关处理, 文字重新编写,增加Linux Shell环境下提示文字颜色
+- 取消选项 `+v`, 调整为系统直接处理, 分别为 `Notic` `Warning` `Error`
+- 修改数据库连接尝试次数: 由原来5次改成3次, 每次尝试增加3秒间隔时间
 
 ## Command [区分大小写]
 - `+f`  Model Class保存路径, 默认保存在gorm.php相应目录下的BuildResult文件夹下
@@ -30,7 +30,6 @@
 - `+n`  连接mysql数据库名
 - `+O`  数据库驱动选项处理, 多个时用 ',' 分隔
 - `+t`  指定Build的表名，多个时用 ',' 分隔
-- `+v`  显示详情[1-4]，默认 3
 - `+H`  显示帮助
 
 ## Example
@@ -68,6 +67,11 @@ class Db extends \Config\ConfigAbstract {
 ```
 
 ## ChangeLog
+`[2014-09-18]`
+- Linux 平台下输入密码不再回显
+- 修复多个Bug
+- 一些小细节调整
+
 `[2014-09-10]`
 - 增加选项 `+F`, 使Model类能支持写 `final` 关键字, 默认 false
 - 字段解析相关代码大幅调整, 包括代码/代码结构, 缓冲区处理, 输出内容等

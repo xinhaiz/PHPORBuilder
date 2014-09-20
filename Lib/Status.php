@@ -3,13 +3,10 @@
 namespace Lib;
 
 final class Status {
+
     protected static $_instance = null;
 
-    private $_view = 1;
-
-    public function __construct() {
-        $this->_view = (int)(\Lib\Options::getInstance()->getView());
-    }
+    public function __construct() {}
 
     /**
      * 单例
@@ -28,10 +25,24 @@ final class Status {
      * @param string $message
      * @param int $level
      */
-    public function show($message, $level = 1){
-        if($this->_view >= $level){
-            echo  '[' . date('Y-m-d H:i:s') . '] ' . (string)$message . "\n";
-        }
+    public function notic($message) {
+        echo (strcasecmp(PHP_OS, 'linux') === 0 ? shell_exec('echo -e "\033[0;36m' . $message . '\033[0m"') : $message);
     }
 
+    /**
+     * @param string $message
+     * @param int $level
+     */
+    public function warning($message) {
+        echo (strcasecmp(PHP_OS, 'linux') === 0 ? shell_exec('echo -e "\033[0;33m[Warning] ' . $message . '\033[0m"') : $message);
+    }
+
+    /**
+     * @param string $message
+     * @param int $level
+     */
+    public function error($message) {
+        $message = (strcasecmp(PHP_OS, 'linux') === 0 ? shell_exec('echo -e "\033[0;31m[Error] ' . $message . '\033[0m"') : $message);
+        throw new \Lib\Exception($message);
+    }
 }

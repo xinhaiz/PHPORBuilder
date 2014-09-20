@@ -21,7 +21,7 @@ final class Build {
      */
     public function before() {
         if ($this->_state === true) {
-            \Lib\Status::getInstance()->show('starting');
+            \Lib\Status::getInstance()->notic('Starting...');
         }
     }
 
@@ -31,7 +31,7 @@ final class Build {
     public function after() {
         if ($this->_state === true) {
             $this->_state = false;
-            \Lib\Status::getInstance()->show('ended');
+            \Lib\Status::getInstance()->notic('Ended');
         }
     }
 
@@ -55,35 +55,32 @@ final class Build {
         $op = \Lib\Options::getInstance();
 
         if (empty($this->_dbname)) {
-            throw new \Lib\Exception('database unset');
+            $st->error('The database is not specified');
         }
 
-        $st->show('reading configuration tables', 2);
+        $st->notic('Enumerating database tables...');
         $tables = $op->getTable();
 
         if (empty($tables)) {
-            $st->show('not found configuration tables', 2);
-            $st->show('reading database ：[' . $this->_dbname . ']', 2);
             $tables = $db->findTables();
-        }
-        else {
+        } else {
             foreach ($tables as $table) {
                 if ($db->isExistTable($table) === false) {
-                    throw new \Lib\Exception('unkown table \'' . $table . '\'');
+                    $st->warning('Unkown table \'' . $table . '\'');
                 }
             }
         }
 
         if (empty($tables)) {
-            throw new \Lib\Exception('not found any tables');
+            $st->warning('Not found any tables');
         }
 
-        $st->show('found ' . sizeof($tables) . ' table(s)', 2);
+        $st->notic('Found ' . sizeof($tables) . ' table(s)');
         $modelFile     = \Model\File::getInstance();
         $modelContents = \Model\Content::getInstance();
 
         foreach ($tables as $table) {
-            $st->show('processing [' . $table . ']', 2);
+            $st->notic('Processing [' . $table . ']');
             $tableName = ($op->getUnderline() === false) ? str_replace('_', '', $table) : $table;
 
             if (preg_match('/^[0-9]+/', $tableName)) {
@@ -94,10 +91,8 @@ final class Build {
             $modelFile->setTableName($tableName)->build();
             $modelContents->reset();
             $modelFile->reset();
-            $st->show('done', 2);
+            $st->notic('Done');
         }
-
-        $st->show("\n" . \Lib\DbConfig::getInstance()->toString(), 4);
 
         return true;
     }
@@ -181,7 +176,6 @@ final class Build {
         $item[] = ' +n  连接mysql数据库名';
         $item[] = ' +O  数据库驱动选项处理, 多个时用 \',\' 分隔';
         $item[] = ' +t  指定Build的表名，多个时用 \',\' 分隔';
-        $item[] = ' +v  显示详情[1-4]，默认 3';
         $item[] = ' +H  显示帮助';
 
         echo implode("\n", $item) . "\n";
