@@ -37,11 +37,11 @@
 - `H`  显示帮助
 
 ## Example
+
 - 使用Shell模式
 ```sh
 sudo ln -s /home/www/OrmBuild/gorm /usr/bin/gorm
 ```
-
 ```sh
 gorm -f "/home/gsinhi/models" -e "\Base\Model\AbstractModel" -u root -p +n test_orm
 ```
