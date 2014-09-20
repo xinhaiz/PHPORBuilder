@@ -38,7 +38,6 @@
 
 ## Example
 - 使用Shell模式
-
 ```sh
 sudo ln -s /home/www/OrmBuild/gorm /usr/bin/gorm
 ```
