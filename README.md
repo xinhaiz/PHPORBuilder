@@ -9,30 +9,42 @@
 - 重新调整Building Status相关处理, 文字重新编写,增加Linux Shell环境下提示文字颜色
 - 取消选项 `+v`, 调整为系统直接处理, 分别为 `Notic` `Warning` `Error`
 - 修改数据库连接尝试次数: 由原来5次改成3次, 每次尝试增加3秒间隔时间
+- 增加shell处理快速构建PHP ORM [具体查看 `Example`]
 
 ## Command [区分大小写]
-- `+f`  Model Class保存路径, 默认保存在gorm.php相应目录下的BuildResult文件夹下
-- `+e`  Model Class父类 (未开启命名空间，'\\' 以 '_' 代替)
-- `+i`  Model Class类所需接口类 (未开启命名空间，'\\' 以 '_' 代替)
-- `+x`  Model Class文件后缀名, 默认 php
-- `+l`  Model Class文件名/类名是否保留下划线, 默认 false
-- `+L`  Model Class方法名是否保留下划线, 默认 true
-- `+m`  Model Class命名类型, 默认 1，1. %sModel  2. Model%s  3.%s_Model  4. Model_%s
-- `+N`  Model Class的命名空间，默认 \\
-- `+F`  Model Class能支持写 `final` 关键字, 默认 false
-- `+o`  是否开启命名空间， 默认 true
-- `+d`  从Config中读取的数据库配置，默认 false
-- `+T`  设置N个空格替代一个TAB，为0时将以TAB出现,不替换, 默认 4
-- `+u`  连接mysql用户名，使用此项 +d 将失效
-- `+p`  连接mysql密码，使用此项 +d 将失效, 不建议直接在命令行输入密码
-- `+h`  连接mysql主机, 默认 127.0.0.1
-- `+P`  连接mysql主机端口, 默认 3306
-- `+n`  连接mysql数据库名
-- `+O`  数据库驱动选项处理, 多个时用 ',' 分隔
-- `+t`  指定Build的表名，多个时用 ',' 分隔
-- `+H`  显示帮助
+
+`PHP cli模式使用 '+', Shell模式使用 '-', 建议使用Shell模式`
+
+- `f`  Model Class保存路径, 默认保存在gorm.php相应目录下的BuildResult文件夹下
+- `e`  Model Class父类 (未开启命名空间，'\\' 以 '_' 代替)
+- `i`  Model Class类所需接口类 (未开启命名空间，'\\' 以 '_' 代替)
+- `x`  Model Class文件后缀名, 默认 php
+- `l`  Model Class文件名/类名是否保留下划线, 默认 false
+- `L`  Model Class方法名是否保留下划线, 默认 true
+- `m`  Model Class命名类型, 默认 1，1. %sModel  2. Model%s  3.%s_Model  4. Model_%s
+- `N`  Model Class的命名空间，默认 \\
+- `F`  Model Class能支持写 `final` 关键字, 默认 false
+- `o`  是否开启命名空间， 默认 true
+- `d`  从Config中读取的数据库配置，默认 false
+- `T`  设置N个空格替代一个TAB，为0时将以TAB出现,不替换, 默认 4
+- `u`  连接mysql用户名，使用此项 +d 将失效
+- `p`  连接mysql密码，使用此项 +d 将失效, 不建议直接在命令行输入密码
+- `h`  连接mysql主机, 默认 127.0.0.1
+- `P`  连接mysql主机端口, 默认 3306
+- `n`  连接mysql数据库名
+- `O`  数据库驱动选项处理, 多个时用 ',' 分隔
+- `t`  指定Build的表名，多个时用 ',' 分隔
+- `H`  显示帮助
 
 ## Example
+- 使用Shell模式
+```sh
+sudo ln -s /home/www/OrmBuild/gorm /usr/bin/gorm
+```
+
+```sh
+gorm -f "/home/gsinhi/models" -e "\Base\Model\AbstractModel" -u root -p +n test_orm
+```
 
 - 指定保存路径
 ```php
