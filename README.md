@@ -43,7 +43,7 @@
 sudo ln -s /home/www/OrmBuild/gorm /usr/bin/gorm
 ```
 ```sh
-gorm -f "/home/gsinhi/models" -e "\Base\Model\AbstractModel" -u root -p +n test_orm
+gorm -f "/home/gsinhi/models" -e "\Base\Model\AbstractModel" -u root -p -n test_orm
 ```
 
 - 指定保存路径
