@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# 你可能需要修改下这个路径
+prefix='/home/www/OrmBuild/'
+
 arg=();
 
 for((i=1;i<=$#;i++)); do
@@ -16,4 +19,4 @@ for((i=1;i<=$#;i++)); do
     arg[i]=$pv
 done
 
-/usr/bin/php -f gorm.php ${arg[*]}
+/usr/bin/php -f ${prefix}gorm.php ${arg[*]}
