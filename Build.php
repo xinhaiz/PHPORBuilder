@@ -80,18 +80,20 @@ final class Build {
         $modelContents = \Model\Content::getInstance();
 
         foreach ($tables as $table) {
-            $st->notic('Processing [' . $table . ']');
             $tableName = ($op->getUnderline() === false) ? str_replace('_', '', $table) : $table;
 
             if (preg_match('/^[0-9]+/', $tableName)) {
                 $tableName = ltrim(preg_replace('/^[0-9]+/', '', $tableName), '_');
             }
 
+            $st->notic('-----------------');
+            $st->notic('Processing [' . $table . ']');
             $modelContents->setTableName($tableName)->setColumns($db->findCols($table))->build();
+            $st->notic('Done');
+
             $modelFile->setTableName($tableName)->build();
             $modelContents->reset();
             $modelFile->reset();
-            $st->notic('Done');
         }
 
         return true;

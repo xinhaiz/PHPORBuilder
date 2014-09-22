@@ -100,8 +100,9 @@ final class Content {
                 continue;
             }
 
+            $status->notic('    Parsing [' . $colName . ']...', false);
             $result = $this->parseColumn($struct);
-            ($result === false) ? $status->warning('Parse failed') : $status->notic('Parsed [' . $colName . ']...  done');
+            $status->notic('\t' . ($result === false ? 'failed' : 'OK'));
 
             $items[] = $colName;
         }

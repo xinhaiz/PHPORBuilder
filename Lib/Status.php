@@ -23,10 +23,11 @@ final class Status {
 
     /**
      * @param string $message
-     * @param int $level
+     * @param int $newline
      */
-    public function notic($message) {
-        echo (strcasecmp(PHP_OS, 'linux') === 0 ? shell_exec('echo -e "\033[0;36m' . $message . '\033[0m"') : $message);
+    public function notic($message, $newline = true) {
+        $notice = (strcasecmp(PHP_OS, 'linux') === 0 ? shell_exec('echo -e "\033[0;36m' . $message . '\033[0m"') : $message);
+        echo ($newline === true ? $notice : trim($notice));
     }
 
     /**
