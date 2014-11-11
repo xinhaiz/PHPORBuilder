@@ -20,8 +20,8 @@ final class Build {
      * 流程处理前执行
      */
     public function before() {
-        if ($this->_state === true) {
-            \Lib\State::notice('Starting...');
+        if ($this->_state === false) {
+            \Lib\State::error('Invalid process');
         }
     }
 
@@ -29,10 +29,7 @@ final class Build {
      * 流程处理后执行
      */
     public function after() {
-        if ($this->_state === true) {
-            $this->_state = false;
-            \Lib\State::notice('Ended');
-        }
+        $this->_state = ($this->_state === true ? false : true);
     }
 
     /**
@@ -57,7 +54,7 @@ final class Build {
             \Lib\State::error('The database is not specified');
         }
 
-        \Lib\State::notice('Enumerating database tables...');
+        \Lib\State::notice('Scanning the database table...');
         $tables = $op->getTable();
 
         if (empty($tables)) {

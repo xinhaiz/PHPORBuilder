@@ -22,7 +22,7 @@ final class Content {
         'bigint'    => 'int',
         'double'    => 'float',
         'float'     => 'float',
-        'decimal'   => 'float',
+        'decimal'   => 'float'
     );
 
     public function __construct() {
