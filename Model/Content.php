@@ -79,7 +79,6 @@ final class Content {
         $buffer  = \Model\Buffer::getInstance();
         $build   = \Model\Build::getInstance();
         $options = \Lib\Options::getInstance();
-        $status  = \Lib\Status::getInstance();
         $items   = array();
 
         $namespace = ltrim(trim($options->getNamespace(), '\\'), '_');
@@ -100,9 +99,9 @@ final class Content {
                 continue;
             }
 
-            $status->notic('    Parsing [' . $colName . ']...', false);
+            \Lib\State::notice('    Parsing [' . $colName . ']...', false);
             $result = $this->parseColumn($struct);
-            $status->notic('\t' . ($result === false ? 'failed' : 'OK'));
+            \Lib\State::notice('\t' . ($result === false ? 'failed' : 'OK'));
 
             $items[] = $colName;
         }
@@ -139,22 +138,21 @@ final class Content {
      */
     public function toString() {
         $buffer  = \Model\Buffer::getInstance();
-        $status  = \Lib\Status::getInstance();
         $options = \Lib\Options::getInstance();
 
         $items   = array();
-        $status->notic('Building php head');
+        \Lib\State::notice('Building php head');
         $items[] = $buffer->pullHeader();
 
         $namespace = ($options->getOnNamespace() === false) ? $options->getNamespace() : '';
 
-        $status->notic('Building class [' . $namespace . sprintf($options->getModelType(), ucfirst($this->_tableName)) . ']');
+        \Lib\State::notice('Building class [' . $namespace . sprintf($options->getModelType(), ucfirst($this->_tableName)) . ']');
         $items[] = $buffer->pullClass();
 
-        $status->notic('Building class property');
+        \Lib\State::notice('Building class property');
         $items[] = $buffer->pullProperty();
 
-        $status->notic('Building class function');
+        \Lib\State::notice('Building class function');
         $items[] = $buffer->pullFunc();
         $items[] = $buffer->pullToArray();
 

@@ -59,7 +59,7 @@ final class File {
     public function build() {
         $this->touchFile();
         file_put_contents($this->getFile(), \Model\Content::getInstance()->toString());
-        \Lib\Status::getInstance()->notic('File [' . $this->_file . '], create successed');
+        \Lib\State::notice('File [' . $this->_file . '], create successed');
     }
 
     /**

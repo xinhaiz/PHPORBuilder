@@ -21,7 +21,7 @@ final class Build {
      */
     public function before() {
         if ($this->_state === true) {
-            \Lib\Status::getInstance()->notic('Starting...');
+            \Lib\State::notice('Starting...');
         }
     }
 
@@ -31,7 +31,7 @@ final class Build {
     public function after() {
         if ($this->_state === true) {
             $this->_state = false;
-            \Lib\Status::getInstance()->notic('Ended');
+            \Lib\State::notice('Ended');
         }
     }
 
@@ -51,14 +51,13 @@ final class Build {
         }
 
         $db = $this->getDbResponse();
-        $st = \Lib\Status::getInstance();
         $op = \Lib\Options::getInstance();
 
         if (empty($this->_dbname)) {
-            $st->error('The database is not specified');
+            \Lib\State::error('The database is not specified');
         }
 
-        $st->notic('Enumerating database tables...');
+        \Lib\State::notice('Enumerating database tables...');
         $tables = $op->getTable();
 
         if (empty($tables)) {
@@ -66,16 +65,16 @@ final class Build {
         } else {
             foreach ($tables as $table) {
                 if ($db->isExistTable($table) === false) {
-                    $st->warning('Unkown table \'' . $table . '\'');
+                    \Lib\State::warning('Unkown table \'' . $table . '\'');
                 }
             }
         }
 
         if (empty($tables)) {
-            $st->warning('Not found any tables');
+            \Lib\State::warning('Not found any tables');
         }
 
-        $st->notic('Found ' . sizeof($tables) . ' table(s)');
+        \Lib\State::notice('Found ' . sizeof($tables) . ' table(s)');
         $modelFile     = \Model\File::getInstance();
         $modelContents = \Model\Content::getInstance();
 
@@ -86,10 +85,10 @@ final class Build {
                 $tableName = ltrim(preg_replace('/^[0-9]+/', '', $tableName), '_');
             }
 
-            $st->notic('-----------------');
-            $st->notic('Processing [' . $table . ']');
+            \Lib\State::notice('-----------------');
+            \Lib\State::notice('Processing [' . $table . ']');
             $modelContents->setTableName($tableName)->setColumns($db->findCols($table))->build();
-            $st->notic('Done');
+            \Lib\State::notice('Done');
 
             $modelFile->setTableName($tableName)->build();
             $modelContents->reset();
@@ -159,26 +158,26 @@ final class Build {
         $this->_isHelp = true;
         $item          = array();
 
-        $item[] = ' +f  Model Class保存路径, 默认保存在work.php相应目录下的BuildResult文件夹下';
-        $item[] = ' +e  Model Class父类 (未开启命名空间，\'\\\' 以 \'_\' 代替)';
-        $item[] = ' +i  Model Class类所需接口类 (未开启命名空间，\'\\\' 以 \'_\' 代替)';
-        $item[] = ' +x  Model Class文件后缀名, 默认 php';
-        $item[] = ' +l  Model Class文件名/类名是否保留下划线, 默认 false';
-        $item[] = ' +L  Model Class方法名是否保留下划线, 默认 true';
-        $item[] = ' +m  Model Class命名类型, 默认 1，1. %sModel  2. Model%s  3.%s_Model  4. Model_%s';
-        $item[] = ' +N  Model Class的命名空间，默认 \\';
-        $item[] = ' +F  Model Class能支持写 `final` 关键字, 默认 false';
-        $item[] = ' +o  是否开启命名空间， 默认 true';
-        $item[] = ' +d  从Config中读取的数据库配置，默认 false';
-        $item[] = ' +T  设置N个空格替代一个TAB，为0时将以TAB出现,不替换, 默认 4';
-        $item[] = ' +u  连接mysql用户名，使用此项 +d 将失效';
-        $item[] = ' +p  连接mysql密码，使用此项 +d 将失效, 不建议直接在命令行输入密码';
-        $item[] = ' +h  连接mysql主机, 默认 127.0.0.1';
-        $item[] = ' +P  连接mysql主机端口, 默认 3306';
-        $item[] = ' +n  连接mysql数据库名';
-        $item[] = ' +O  数据库驱动选项处理, 多个时用 \',\' 分隔';
-        $item[] = ' +t  指定Build的表名，多个时用 \',\' 分隔';
-        $item[] = ' +H  显示帮助';
+        $item[] = ' f  Model Class保存路径, 默认保存在work.php相应目录下的BuildResult文件夹下';
+        $item[] = ' e  Model Class父类 (未开启命名空间，\'\\\' 以 \'_\' 代替)';
+        $item[] = ' i  Model Class类所需接口类 (未开启命名空间，\'\\\' 以 \'_\' 代替)';
+        $item[] = ' x  Model Class文件后缀名, 默认 php';
+        $item[] = ' l  Model Class文件名/类名是否保留下划线, 默认 false';
+        $item[] = ' L  Model Class方法名是否保留下划线, 默认 true';
+        $item[] = ' m  Model Class命名类型, 默认 1，1. %sModel  2. Model%s  3.%s_Model  4. Model_%s';
+        $item[] = ' N  Model Class的命名空间，默认 \\';
+        $item[] = ' F  Model Class能支持写 `final` 关键字, 默认 false';
+        $item[] = ' o  是否开启命名空间， 默认 true';
+        $item[] = ' d  从Config中读取的数据库配置，默认 false';
+        $item[] = ' T  设置N个空格替代一个TAB，为0时将以TAB出现不替换, 默认 4';
+        $item[] = ' u  连接mysql用户名，使用此项 +d 将失效';
+        $item[] = ' p  连接mysql密码，使用此项 +d 将失效, 不建议直接在命令行输入密码';
+        $item[] = ' h  连接mysql主机, 默认 127.0.0.1';
+        $item[] = ' P  连接mysql主机端口, 默认 3306';
+        $item[] = ' n  连接mysql数据库名';
+        $item[] = ' O  数据库驱动选项处理, 多个时用 \',\' 分隔';
+        $item[] = ' t  指定Build的表名，多个时用 \',\' 分隔';
+        $item[] = ' H  显示帮助';
 
         echo implode("\n", $item) . "\n";
     }

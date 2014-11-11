@@ -8,23 +8,22 @@ class Db {
     protected $_dbname = null;
 
     public function __construct(\Lib\DbConfig $dbConfig) {
-        $status = \Lib\Status::getInstance();
         $maxTry = 3;
         $index  = 1;
 
-        $status->notic('Connecting to MySQL...');
+        \Lib\State::notice('Connecting to MySQL...');
 
         while($index <= $maxTry){
-            $status->notic('Try ' . $index . '...');
+            \Lib\State::notice('Try ' . $index . '...');
             $index++;
 
             try {
                 $pdo = new \PDO($dbConfig->getDsn(), $dbConfig->getUsername(), $dbConfig->getPasswd());
             } catch (\Exception $e){
-                $status->warning($e->getMessage());
+                \Lib\State::warning($e->getMessage());
 
                 if($index <= $maxTry) {
-                    $status->notic('Try to connect again after 3 seconds');
+                    \Lib\State::notice('Try to connect again after 3 seconds');
                     sleep(3);
                 }
                 continue;
@@ -34,8 +33,8 @@ class Db {
         }
 
         if (!isset($pdo) || !$pdo instanceof \PDO) {
-            $status->notic($dbConfig->toString());
-            $status->error('MySQL connection failed.');
+            \Lib\State::notice($dbConfig->toString());
+            \Lib\State::error('MySQL connection failed.');
         }
 
         $options = $dbConfig->getOptions();
@@ -46,7 +45,7 @@ class Db {
             }
         }
 
-        $status->notic('connect successed');
+        \Lib\State::notice('connect successed');
         $this->_db     = $pdo;
         $this->_dbname = $dbConfig->getDbname();
     }
