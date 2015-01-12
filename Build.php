@@ -20,7 +20,7 @@ final class Build {
      * 流程处理前执行
      */
     public function before() {
-        if ($this->_state === false) {
+        if ($this->_state === false && \Lib\Params::getInstance()->showHelp() === false) {
             \Lib\State::error('Invalid process');
         }
     }
