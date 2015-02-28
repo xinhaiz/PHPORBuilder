@@ -94,8 +94,37 @@ class Db {
 
         return (isset($count['total']) && $count['total'] > 0) ? true : false;
     }
+    
+    /**
+     * 获取表信息
+     *
+     * @param string $tableName
+     * @return array
+     */
+    public function findTableInfo($tableName){
+         $query = $this->_db->query("select * from `information_schema`.`TABLES` "
+                . "where `TABLE_SCHEMA` = '" . addslashes($this->_dbname) . "'"
+                 . " and `TABLE_NAME` = '" . addslashes($tableName) . "'");
 
-        /**
+         if (!$query instanceof \PDOStatement) {
+            return array();
+        }
+
+        $table = $query->fetch();
+        $items = array();
+
+        foreach ($table as $key => $val) {
+            if ($key === (int)$key) {
+                continue;
+            }
+
+            $items[strtolower($key)] = $val;
+        }
+
+        return $items;
+    }
+
+    /**
      * 列出表结构相关信息
      *
      * @param string $table

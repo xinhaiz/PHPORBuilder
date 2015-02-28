@@ -8,6 +8,11 @@ final class Content {
     private $_columns           = null;
     private $_tableName         = null;
     private $_tab               = null;
+    
+    /**
+     * @var \Model\Tablestruct
+     */
+    private $_tableInfo = null;
 
     /**
      * 未在配置内的将默认为 string
@@ -51,6 +56,20 @@ final class Content {
 
         return $this;
     }
+    
+    /**
+     * @param \Model\Tablestruct|array $tableInfo
+     * @return \Lib\Modelfile
+     */
+    public function setTableInfo($tableInfo) {
+        if(!$tableInfo instanceof \Model\Tablestruct) {
+            $tableInfo = new \Model\Tablestruct($tableInfo);
+        }
+        
+        $this->_tableInfo = $tableInfo;
+
+        return $this;
+    }
 
     /**
      * @param string $columns
@@ -80,6 +99,18 @@ final class Content {
         $build   = \Model\Build::getInstance();
         $options = \Lib\Options::getInstance();
         $items   = array();
+        
+        if(!empty($this->_tableInfo) && $this->_tableInfo instanceof \Model\Tablestruct) {
+            $tableInfo    = $this->_tableInfo;
+            $tableComment = array(
+                $tableInfo->getTable_comment(),
+                '',
+                '@Table Schema: ' . $tableInfo->getTable_schema(),
+                '@Table Name: ' . $tableInfo->getTable_name()
+            );
+            
+            $buffer->pushHeader($build->toComment($tableComment, false));
+        }
 
         $namespace = ltrim(trim($options->getNamespace(), '\\'), '_');
 

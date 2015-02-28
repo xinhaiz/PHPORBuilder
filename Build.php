@@ -84,6 +84,7 @@ final class Build {
 
             \Lib\State::notice('-----------------');
             \Lib\State::notice('Processing [' . $table . ']');
+            $modelContents->setTableInfo($db->findTableInfo($table));
             $modelContents->setTableName($tableName)->setColumns($db->findCols($table))->build();
             \Lib\State::notice('Done');
 

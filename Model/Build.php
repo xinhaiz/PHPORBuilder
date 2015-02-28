@@ -31,16 +31,18 @@ final class Build {
      * @return string
      */
     public function toClass($name) {
-        $options  = \Lib\Options::getInstance();
-        $finalCls = $options->getFinal() === true ? 'final ' : '';
-        $items   = array($finalCls . 'class ' . sprintf($options->getModelType(), ucfirst($name)));
+        $options    = \Lib\Options::getInstance();
+        $finalCls   = $options->getFinal() === true ? 'final ' : '';
+        $items      = array($finalCls . 'class ' . sprintf($options->getModelType(), ucfirst($name)));
+        $extendName = $options->getExtendName();
+        $implements = $options->getImplements();
 
-        if (!empty($options->getExtendName())) {
-            $items[] = ' extends ' . $options->getExtendName();
+        if (!empty($extendName)) {
+            $items[] = ' extends ' . $extendName;
         }
 
-        if (!empty($options->getImplements())) {
-            $items[] = ' implements ' . $options->getImplements();
+        if (!empty($implements)) {
+            $items[] = ' implements ' . $implements;
         }
 
         $items[] = " {\n";
@@ -52,17 +54,19 @@ final class Build {
      * 创建注释
      *
      * @param array|string $comments
+     * @param boolean $indentation
      * @return array
      */
-    public function toComment($comments) {
+    public function toComment($comments, $indentation = true) {
         $comments = (is_array($comments)) ? $comments : array($comments);
-        $items    = array($this->_tab . '/**');
+        $tabBlock = ($indentation === false) ? '' : $this->_tab;
+        $items    = array($tabBlock . '/**');
 
         foreach ($comments as $comment) {
-            $items[] = $this->_tab . ' * ' . $comment;
+            $items[] = $tabBlock . ' * ' . $comment;
         }
 
-        $items[] = $this->_tab . ' */';
+        $items[] = $tabBlock . ' */';
 
         return implode("\n", $items);
     }
