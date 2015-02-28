@@ -12,11 +12,11 @@ for((i=1;i<=$#;i++)); do
     prv=`expr substr "$pv" 1 1`
     prc=`expr substr "$pv" 2 "$prl"`
 
-    if [ $prv = "-" ]; then
+    if [ "$prv" = "-" ]; then
         pv='+'${prc}
     fi
 
     arg[i]=$pv
 done
 
-/usr/bin/php -f ${prefix}"/gorm.php" ${arg[*]}
+/usr/local/bin/php -f ${prefix}"/gorm.php" ${arg[*]}
