@@ -9,8 +9,8 @@ for((i=1;i<=$#;i++)); do
     var=$i
     pv="${!var}"
     prl=${#pv}
-    prv=${pv:1:1}
-    prc=${pv:2:$prl}
+    prv=${pv:0:1}
+    prc=${pv:1:$prl}
 
     if [ "$prv" = "-" ]; then
         pv='+'${prc}
@@ -19,4 +19,4 @@ for((i=1;i<=$#;i++)); do
     arg[i]=$pv
 done
 
-/usr/local/bin/php -f ${prefix}"/gorm.php" ${arg[*]}
+`which php` -f ${prefix}"/gorm.php" ${arg[*]}
