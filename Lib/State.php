@@ -9,7 +9,7 @@ final class State {
      * @param int $newline
      */
     public static function notice($message, $newline = true) {
-        $notice = (strcasecmp(PHP_OS, 'linux') === 0 ? shell_exec('echo -e "\033[0;36m' . $message . '\033[0m"') : $message);
+        $notice = self::output($message);
         echo ($newline === true ? $notice : trim($notice));
     }
 
@@ -18,7 +18,7 @@ final class State {
      * @param int $level
      */
     public static function warning($message) {
-        echo (strcasecmp(PHP_OS, 'linux') === 0 ? shell_exec('echo -e "\033[0;33m[Warning] ' . $message . '\033[0m"') : $message);
+        echo self::output($message);
     }
 
     /**
@@ -26,7 +26,27 @@ final class State {
      * @param int $level
      */
     public static function error($message) {
-        $message = (strcasecmp(PHP_OS, 'linux') === 0 ? shell_exec('echo -e "\033[0;31m[Error] ' . $message . '\033[0m"') : $message);
-        throw new \Lib\Exception($message);
+        throw new \Lib\Exception(self::output($message));
+    }
+    
+    /**
+     * 输出信息
+     * 
+     * @param string $message
+     * @return string
+     */
+    public static function output($message) {
+        switch (strtolower(PHP_OS)) {
+            case 'linux':
+                $message = shell_exec('echo -e "\033[0;31m[Error] ' . $message . '\033[0m"');
+            break;
+            case 'darwin':
+                $message = shell_exec('echo "\033[0;31m[Error] ' . $message . '\033[0m"');
+            break;
+            default:
+            break;
+        }
+        
+        return $message;
     }
 }
