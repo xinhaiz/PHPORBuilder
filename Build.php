@@ -155,7 +155,7 @@ final class Build {
         $this->_isHelp = true;
         $item          = array();
 
-        $item[] = ' f  Model Class保存路径, 默认保存在work.php相应目录下的BuildResult文件夹下';
+        $item[] = 'f  Model Class保存路径, 默认保存在work.php相应目录下的BuildResult文件夹下';
         $item[] = ' e  Model Class父类 (未开启命名空间，\'\\\' 以 \'_\' 代替)';
         $item[] = ' i  Model Class类所需接口类 (未开启命名空间，\'\\\' 以 \'_\' 代替)';
         $item[] = ' x  Model Class文件后缀名, 默认 php';
@@ -163,7 +163,7 @@ final class Build {
         $item[] = ' L  Model Class方法名是否保留下划线, 默认 true';
         $item[] = ' m  Model Class命名类型, 默认 1，1. %sModel  2. Model%s  3.%s_Model  4. Model_%s';
         $item[] = ' N  Model Class的命名空间，默认 \\';
-        $item[] = ' F  Model Class能支持写 `final` 关键字, 默认 false';
+        $item[] = ' F  Model Class能支持写 final 关键字, 默认 false';
         $item[] = ' o  是否开启命名空间， 默认 true';
         $item[] = ' d  从Config中读取的数据库配置，默认 false';
         $item[] = ' T  设置N个空格替代一个TAB，为0时将以TAB出现不替换, 默认 4';
@@ -176,7 +176,7 @@ final class Build {
         $item[] = ' t  指定Build的表名，多个时用 \',\' 分隔';
         $item[] = ' H  显示帮助';
 
-        echo implode("\n", $item) . "\n";
+        \Lib\State::notice(implode("\n", $item));
     }
 
 }
