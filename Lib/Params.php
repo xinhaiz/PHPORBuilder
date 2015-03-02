@@ -88,7 +88,7 @@ final class Params {
                 if(strpos($val, '+') === 0) {
                     echo 'Enter password: ';
 
-                    if(strcasecmp(PHP_OS, 'linux') === 0) {
+                    if(strcasecmp(PHP_OS, 'linux') === 0 || strcasecmp(PHP_OS, 'darwin') === 0) {
                         $passwd = shell_exec('stty -echo && read password && stty echo && echo $password');
                         echo "\n";
                     } else {
