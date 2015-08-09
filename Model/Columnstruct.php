@@ -29,7 +29,7 @@ final class Columnstruct {
      * @return \Model\Columns
      */
     public function setColumn_name($column_name) {
-        $this->_column_name = $column_name;
+        $this->_column_name = strtolower($column_name);
 
         return $this;
     }
@@ -50,7 +50,7 @@ final class Columnstruct {
      * @return \Model\Columns
      */
     public function setColumn_type($column_type) {
-        $this->_column_type = $column_type;
+        $this->_column_type = strtolower($column_type);
 
         return $this;
     }
