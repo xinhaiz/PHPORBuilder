@@ -165,7 +165,7 @@ final class Build {
         $item[] = ' m  Model Class命名类型, 默认 1，1. %sModel  2. Model%s  3.%s_Model  4. Model_%s';
         $item[] = ' N  Model Class的命名空间，默认 \\';
         $item[] = ' F  Model Class能支持写 final 关键字, 默认 false';
-        $item[] = ' U  文件名/类名/列名所有 _ 分隔单词首字母大写，否则仅第一单词首字母大写, 默认 true';
+        $item[] = ' U  文件名/类名/列名所有 _ 分隔单词首字母大写，否则仅第一单词首字母大写, 默认 false';
         $item[] = ' o  是否开启命名空间， 默认 true';
         $item[] = ' d  从Config中读取的数据库配置，默认 false';
         $item[] = ' T  设置N个空格替代一个TAB，为0时将以TAB出现不替换, 默认 4';

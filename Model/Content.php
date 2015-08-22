@@ -221,20 +221,20 @@ final class Content {
         $build    = \Model\Build::getInstance();
         $buffer   = \Model\Buffer::getInstance();
         $options  = \Lib\Options::getInstance();
-        $name     = \Lib\Func::uc($struct->getColumn_name());
-        $lcName   = lcfirst($name);
+        $name     = strtolower($struct->getColumn_name());
+        $propName = lcfirst(\Lib\Func::uc($name));
         $dataType = $this->getDateType($struct->getData_type());
         
-        $commentArr[] = '@param ' . $dataType . ' $' . $lcName;
+        $commentArr[] = '@param ' . $dataType . ' $' . $propName;
         $commentArr[] = '@return ' . ltrim($options->getNamespace(), '_')
                 . sprintf($options->getModelType(), $this->_tableName);
 
         $buffer->pushFunc($build->toComment($commentArr));
-        $buffer->pushFunc($build->toSetFunc($name, array(
-            str_repeat($this->_tab, 2) . '$this->_' . $lcName . ' = (' . $dataType . ')$' . $lcName . ';',
+        $buffer->pushFunc($build->toSetFunc(ucfirst($name), array(
+            str_repeat($this->_tab, 2) . '$this->_' . $propName . ' = (' . $dataType . ')$' . $propName . ';',
             '',
             str_repeat($this->_tab, 2) . 'return $this;'
-        ), $lcName));
+        ), $propName));
     }
 
     /**
@@ -244,14 +244,15 @@ final class Content {
      * @param array $commentArr
      */
     protected function buildGetfuncContent(\Model\Columnstruct $struct, array $commentArr) {
-        $build  = \Model\Build::getInstance();
-        $buffer = \Model\Buffer::getInstance();
-        $name   = \Lib\Func::uc($struct->getColumn_name());
+        $build    = \Model\Build::getInstance();
+        $buffer   = \Model\Buffer::getInstance();
+        $name     = strtolower($struct->getColumn_name());
+        $propName = lcfirst(\Lib\Func::uc($name));
 
         $commentArr[] = '@return ' . $this->getDateType($struct->getData_type());
 
         $buffer->pushFunc($build->toComment($commentArr));
-        $buffer->pushFunc($build->toGetFunc($name, array(str_repeat($this->_tab, 2) . 'return $this->_' . lcfirst($name) . ';')));
+        $buffer->pushFunc($build->toGetFunc(ucfirst($name), array(str_repeat($this->_tab, 2) . 'return $this->_' . $propName . ';')));
     }
 
     /**
