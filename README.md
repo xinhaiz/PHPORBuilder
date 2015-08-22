@@ -1,15 +1,16 @@
-# Gorm v1.0.0 Beta
+# Gorm v1.2.0 Beta
 一个快速构建PHP ORM类的工具
 
 ## Requirement
 - PHP 5.4 + (PDO support)
 - Linux Shell / Windown cmd
 
-## Last ChangeLog [2014-09-20]
-- 重新调整Building Status相关处理, 文字重新编写,增加Linux Shell环境下提示文字颜色
-- 取消选项 `+v`, 调整为系统直接处理, 分别为 `Notic` `Warning` `Error`
-- 修改数据库连接尝试次数: 由原来5次改成3次, 每次尝试增加3秒间隔时间
-- 增加shell处理快速构建PHP ORM [具体查看 `Example`]
+## Last ChangeLog [2015-08-22]
+- 版本调整为 v1.2.0 Beta
+- 调整生成命名逻辑，保持所有文件名/类名/列名与驼峰命名一致
+- 增加 `U` 参数保持兼容
+- 调整部分处理逻辑及删除判断为冗余的代码
+- 修复其它一些已知的问题
 
 ## Command [区分大小写]
 
@@ -24,6 +25,7 @@
 - `m`  Model Class命名类型, 默认 1，1. %sModel  2. Model%s  3.%s_Model  4. Model_%s
 - `N`  Model Class的命名空间，默认 \\
 - `F`  Model Class能支持写 `final` 关键字, 默认 false
+- `U`  文件名/类名/列名所有 _ 分隔单词首字母大写，否则仅第一单词首字母大写, 默认 true
 - `o`  是否开启命名空间， 默认 true
 - `d`  从Config中读取的数据库配置，默认 false
 - `T`  设置N个空格替代一个TAB，为0时将以TAB出现,不替换, 默认 4
@@ -79,6 +81,12 @@ class Db extends \Config\ConfigAbstract {
 ```
 
 ## ChangeLog
+`[2014-09-20] v1.0.0 Beta`
+- 重新调整Building Status相关处理, 文字重新编写,增加Linux Shell环境下提示文字颜色
+- 取消选项 `+v`, 调整为系统直接处理, 分别为 `Notic` `Warning` `Error`
+- 修改数据库连接尝试次数: 由原来5次改成3次, 每次尝试增加3秒间隔时间
+- 增加shell处理快速构建PHP ORM [具体查看 `Example`]
+
 `[2014-09-18]`
 - Linux 平台下输入密码不再回显
 - 修复多个Bug
