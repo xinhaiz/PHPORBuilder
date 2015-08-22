@@ -28,7 +28,7 @@ final class File {
      * @return \Lib\Modelfile
      */
     public function setTableName($tableName) {
-        $this->_tableName = (string) (strtolower($tableName));
+        $this->_tableName = (string)$tableName;
         $this->_file = null;
 
         return $this;
@@ -75,7 +75,7 @@ final class File {
             mkdir($dir, 0755, true);
         }
 
-        $this->_file = $dir . DS . ucfirst($this->_tableName) . $options->getExt();
+        $this->_file = $dir . DS . $this->_tableName . $options->getExt();
 
         return true;
     }

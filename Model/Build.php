@@ -33,7 +33,7 @@ final class Build {
     public function toClass($name) {
         $options    = \Lib\Options::getInstance();
         $finalCls   = $options->getFinal() === true ? 'final ' : '';
-        $items      = array($finalCls . 'class ' . sprintf($options->getModelType(), ucfirst($name)));
+        $items      = array($finalCls . 'class ' . sprintf($options->getModelType(), $name));
         $extendName = $options->getExtendName();
         $implements = $options->getImplements();
 
@@ -91,7 +91,7 @@ final class Build {
      * @return string
      */
     public function toSetFunc($name, array $code, $params) {
-        return $this->toFunc('set' . ucfirst($name), $code, $params, 'public');
+        return $this->toFunc('set' . $name, $code, $params, 'public');
     }
 
     /**
@@ -102,7 +102,7 @@ final class Build {
      * @return string
      */
     public function toGetFunc($name, $code) {
-        return $this->toFunc('get' . ucfirst($name), $code, null, 'public');
+        return $this->toFunc('get' . $name, $code, null, 'public');
     }
 
     /**
@@ -143,7 +143,7 @@ final class Build {
 
         foreach ($sets as $name) {
             $len = $maxLen - mb_strlen($name);
-            $citem[] = str_repeat($this->_tab, 3) . '\'' . $name . '\'' . str_repeat(' ', $len) . '=> $this->_' . $name;
+            $citem[] = str_repeat($this->_tab, 3) . '\'' . $name . '\'' . str_repeat(' ', $len) . '=> $this->_' . lcfirst(\Lib\Func::uc($name));
         }
 
         $items[] = implode(',' . "\n", $citem);

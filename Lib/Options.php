@@ -19,6 +19,7 @@ final class Options {
         100 => 'dbConfig',     // +d
         84  => 'tab',          // +T
         117 => 'username',     // +u
+        85  => 'ucwords',      // +U
         104 => 'host',         // +h
         112 => 'passwd',       // +p
         110 => 'dbname',       // +n
@@ -36,6 +37,7 @@ final class Options {
     private $_namespace    = '\\';
     private $_final        = false;
     private $_underline    = false;
+    private $_ucwords      = true;
     private $_colunderline = true;
     private $_onNamespace  = true;
     private $_dbConfig     = null;
@@ -245,6 +247,27 @@ final class Options {
      */
     public function getTab(){
         return $this->_tab;
+    }
+    
+    /**
+     * 单词首字母大小写
+     * 
+     * @param bool|int $ucwords
+     * @return \Lib\Options
+     */
+    public function setUcwords($ucwords) {
+        $this->_ucwords = (bool)$ucwords;
+        
+        return $this;
+    }
+    
+    /**
+     * 单词首字母大小写
+     * 
+     * @return boolean
+     */
+    public function getUcwords() {
+        return $this->_ucwords;
     }
 
     /**

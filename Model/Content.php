@@ -52,7 +52,7 @@ final class Content {
      * @return \Lib\Modelfile
      */
     public function setTableName($tableName) {
-        $this->_tableName = (string)(strtolower($tableName));
+        $this->_tableName = (string)$tableName;
 
         return $this;
     }
@@ -120,7 +120,7 @@ final class Content {
             $namespace = '';
         }
 
-        $buffer->pushClass($build->toClass($namespace . ucfirst($this->_tableName)));
+        $buffer->pushClass($build->toClass($namespace . $this->_tableName));
 
         foreach ($columns as $column) {
             $struct  = new \Model\Columnstruct($column);
@@ -177,7 +177,7 @@ final class Content {
 
         $namespace = ($options->getOnNamespace() === false) ? $options->getNamespace() : '';
 
-        \Lib\State::notice('Building class [' . $namespace . sprintf($options->getModelType(), ucfirst($this->_tableName)) . ']');
+        \Lib\State::notice('Building class [' . $namespace . sprintf($options->getModelType(), $this->_tableName) . ']');
         $items[] = $buffer->pullClass();
 
         \Lib\State::notice('Building class property');
@@ -201,13 +201,14 @@ final class Content {
      * @param array $commentArr
      */
     protected function buildPropertyContent(\Model\Columnstruct $struct, array $commentArr) {
-        $build  = \Model\Build::getInstance();
-        $buffer = \Model\Buffer::getInstance();
+        $build   = \Model\Build::getInstance();
+        $buffer  = \Model\Buffer::getInstance();
+        $name    = \Lib\Func::uc($struct->getColumn_name());
 
         $commentArr[] = '@var ' . $this->getDateType($struct->getData_type());
-
+        
         $buffer->pushProperty($build->toComment($commentArr));
-        $buffer->pushProperty($build->toProperty('_' . $struct->getColumn_name(), $struct->getColumn_default()));
+        $buffer->pushProperty($build->toProperty('_' . lcfirst($name), $struct->getColumn_default()));
     }
 
     /**
@@ -220,19 +221,20 @@ final class Content {
         $build    = \Model\Build::getInstance();
         $buffer   = \Model\Buffer::getInstance();
         $options  = \Lib\Options::getInstance();
-        $name     = $struct->getColumn_name();
+        $name     = \Lib\Func::uc($struct->getColumn_name());
+        $lcName   = lcfirst($name);
         $dataType = $this->getDateType($struct->getData_type());
-
-        $commentArr[] = '@param ' . $dataType . ' $' . $name;
+        
+        $commentArr[] = '@param ' . $dataType . ' $' . $lcName;
         $commentArr[] = '@return ' . ltrim($options->getNamespace(), '_')
-                . sprintf($options->getModelType(), ucfirst($this->_tableName));
+                . sprintf($options->getModelType(), $this->_tableName);
 
         $buffer->pushFunc($build->toComment($commentArr));
         $buffer->pushFunc($build->toSetFunc($name, array(
-            str_repeat($this->_tab, 2) . '$this->_' . $name . ' = (' . $dataType . ')$' . $name . ';',
+            str_repeat($this->_tab, 2) . '$this->_' . $lcName . ' = (' . $dataType . ')$' . $lcName . ';',
             '',
             str_repeat($this->_tab, 2) . 'return $this;'
-        ), $name));
+        ), $lcName));
     }
 
     /**
@@ -244,12 +246,12 @@ final class Content {
     protected function buildGetfuncContent(\Model\Columnstruct $struct, array $commentArr) {
         $build  = \Model\Build::getInstance();
         $buffer = \Model\Buffer::getInstance();
-        $name   = $struct->getColumn_name();
+        $name   = \Lib\Func::uc($struct->getColumn_name());
 
         $commentArr[] = '@return ' . $this->getDateType($struct->getData_type());
 
         $buffer->pushFunc($build->toComment($commentArr));
-        $buffer->pushFunc($build->toGetFunc($name, array(str_repeat($this->_tab, 2) . 'return $this->_' . $name . ';')));
+        $buffer->pushFunc($build->toGetFunc($name, array(str_repeat($this->_tab, 2) . 'return $this->_' . lcfirst($name) . ';')));
     }
 
     /**
