@@ -143,7 +143,7 @@ final class Build {
 
         foreach ($sets as $name) {
             $len = $maxLen - mb_strlen($name);
-            $citem[] = str_repeat($this->_tab, 3) . '\'' . $name . '\'' . str_repeat(' ', $len) . '=> $this->_' . lcfirst(\Lib\Func::uc($name));
+            $citem[] = str_repeat($this->_tab, 3) . '\'' . $name . '\'' . str_repeat(' ', $len) . '=> $this->_' . lcfirst(\Lib\Func::ucc($name));
         }
 
         $items[] = implode(',' . "\n", $citem);
