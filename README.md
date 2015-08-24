@@ -8,7 +8,8 @@
 ## Last ChangeLog [2015-08-22]
 - 版本调整为 v1.2.0 Beta
 - 调整生成命名逻辑，保持所有文件名/类名与驼峰命名一致
-- 增加 `U` 参数保持兼容
+- 增加 `U` 选项保持兼容
+- 选项 `L` 弃用
 - 调整部分处理逻辑及删除判断为冗余的代码
 - 修复其它一些已知的问题
 
@@ -21,7 +22,7 @@
 - `i`  Model Class类所需接口类 (未开启命名空间，'\\' 以 '_' 代替)
 - `x`  Model Class文件后缀名, 默认 php
 - `l`  Model Class文件名/类名是否保留下划线, 默认 false
-- `L`  Model Class方法名是否保留下划线, 默认 true
+- `L`  Model Class方法名是否保留下划线, 默认 true [弃用]
 - `m`  Model Class命名类型, 默认 1，1. %sModel  2. Model%s  3.%s_Model  4. Model_%s
 - `N`  Model Class的命名空间，默认 \\
 - `F`  Model Class能支持写 `final` 关键字, 默认 false

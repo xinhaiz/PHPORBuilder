@@ -77,11 +77,11 @@ final class Build {
 
         foreach ($tables as $table) {
             $tableName = \Lib\Func::uc($table);
-            
+
             if (preg_match('/^[0-9]+/', $tableName)) {
                 $tableName = ltrim(preg_replace('/^[0-9]+/', '', $tableName), '_');
             }
-            
+
             \Lib\State::notice('-----------------');
             \Lib\State::notice('Processing [' . $table . ']');
             $modelContents->setTableInfo($db->findTableInfo($table));
@@ -161,7 +161,7 @@ final class Build {
         $item[] = ' i  Model Class类所需接口类 (未开启命名空间，\'\\\' 以 \'_\' 代替)';
         $item[] = ' x  Model Class文件后缀名, 默认 php';
         $item[] = ' l  Model Class文件名/类名是否保留下划线, 默认 false';
-        $item[] = ' L  Model Class方法名是否保留下划线, 默认 true';
+        $item[] = ' L  Model Class方法名是否保留下划线, 默认 true [弃用]';
         $item[] = ' m  Model Class命名类型, 默认 1，1. %sModel  2. Model%s  3.%s_Model  4. Model_%s';
         $item[] = ' N  Model Class的命名空间，默认 \\';
         $item[] = ' F  Model Class能支持写 final 关键字, 默认 false';
