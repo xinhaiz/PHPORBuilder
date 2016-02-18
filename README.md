@@ -1,17 +1,16 @@
-# Gorm v1.2.0 Beta
+# Gorm v1.2.1 Beta
 一个快速构建PHP ORM类的工具
 
 ## Requirement
 - PHP 5.4 + (PDO support)
 - Linux Shell / Windown cmd
 
-## Last ChangeLog [2015-08-22]
-- 版本调整为 v1.2.0 Beta
-- 调整生成命名逻辑，保持所有文件名/类名与驼峰命名一致
-- 增加 `U` 选项保持兼容
-- 选项 `L` 弃用
+## Last ChangeLog [2016-02-18]
+- 版本调整为 v1.2.1 Beta
+- 增加 `R` 选项，自定义替换部份类名及文件名
 - 调整部分处理逻辑及删除判断为冗余的代码
 - 修复其它一些已知的问题
+- 调整一些文字说明
 
 ## Command [区分大小写]
 
@@ -24,6 +23,7 @@
 - `l`  Model Class文件名/类名是否保留下划线, 默认 false
 - `L`  Model Class方法名是否保留下划线, 默认 true [弃用]
 - `m`  Model Class命名类型, 默认 1，1. %sModel  2. Model%s  3.%s_Model  4. Model_%s
+- `R`  自定义替换部份类名及文件名，格式 source:target, target相应字符首字母将被自动大写
 - `N`  Model Class的命名空间，默认 \\
 - `F`  Model Class能支持写 `final` 关键字, 默认 false
 - `U`  文件名/类名所有 _ 分隔单词首字母大写，否则仅第一单词首字母大写, 默认 true
@@ -41,7 +41,7 @@
 
 ## Example
 
-- 使用Shell模式
+- 使用Shell模式(推荐)
 ```sh
 sudo ln -s /home/www/OrmBuild/gorm /usr/bin/gorm
 ```
@@ -82,6 +82,14 @@ class Db extends \Config\ConfigAbstract {
 ```
 
 ## ChangeLog
+`[2015-08-22] v1.2.0 Beta`
+- 版本调整为 v1.2.0 Beta
+- 调整生成命名逻辑，保持所有文件名/类名与驼峰命名一致
+- 增加 `U` 选项保持兼容
+- 选项 `L` 弃用
+- 调整部分处理逻辑及删除判断为冗余的代码
+- 修复其它一些已知的问题
+
 `[2014-09-20] v1.0.0 Beta`
 - 重新调整Building Status相关处理, 文字重新编写,增加Linux Shell环境下提示文字颜色
 - 取消选项 `+v`, 调整为系统直接处理, 分别为 `Notic` `Warning` `Error`

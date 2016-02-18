@@ -172,7 +172,7 @@ final class Build {
         $item[] = ' l  Model Class文件名/类名是否保留下划线, 默认 false';
         $item[] = ' L  Model Class方法名是否保留下划线, 默认 true [弃用]';
         $item[] = ' m  Model Class命名类型, 默认 1，1. %sModel  2. Model%s  3.%s_Model  4. Model_%s';
-        $item[] = ' R  自定义替换类名及文件名，格式 source:target, target相应字符首字母将被自动大写';
+        $item[] = ' R  自定义替换部份类名及文件名，格式 source:target, target相应字符首字母将被自动大写';
         $item[] = ' N  Model Class的命名空间，默认 \ ';
         $item[] = ' F  Model Class能支持写 final 关键字, 默认 false';
         $item[] = ' U  文件名/类名/列名所有 _ 分隔单词首字母大写，否则仅第一单词首字母大写, 默认 false';
