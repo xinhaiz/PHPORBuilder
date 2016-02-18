@@ -9,7 +9,7 @@ class Db extends \Config\ConfigAbstract {
             'host'     => 'db.gitxm.com',
             'dbname'   => 'test',
             'username' => 'root',
-            'passwd'   => '103188',
+            'passwd'   => 'root',
             'port'     => '3306',
             'options'  => array("SET NAMES 'utf8'")
         );
