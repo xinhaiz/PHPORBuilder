@@ -13,6 +13,7 @@ final class Options {
         108 => 'underline',    // +l
         76  => 'colunderline', // +L
         109 => 'modelType',    // +m
+        82  => 'replace',      // +R
         78  => 'namespace',    // +N
         70  => 'final',        // +F
         111 => 'onNamespace',  // +o
@@ -32,6 +33,7 @@ final class Options {
     private $_extendName   = null;
     private $_implements   = null;
     private $_modelType    = '%sModel';
+    private $_replace      = null;
     private $_ext          = '.php';
     private $_tab          = '    '; // 4空格
     private $_namespace    = '\\';
@@ -176,14 +178,42 @@ final class Options {
 
         return $this;
     }
+
     /**
      * 模型后缀格式
-
      *
      * @return string
      */
     public function getModelType(){
         return $this->_modelType;
+    }
+
+    /**
+     * 模型名称字符替换
+     *
+     * @param string $modelType
+     * @return \Lib\Optioins
+     */
+    public function setReplace($replaceStr){
+        $replaceArr = explode(':', $replaceStr);
+
+        if(count($replaceArr) === 2) {
+            $this->_replace = $replaceArr;
+        }
+
+        return $this;
+    }
+
+    /**
+     * 模型名称字符替换
+     *
+     * @return string
+     */
+    public function getReplace(){
+        return [
+            'source' => !empty($this->_replace[0]) ? $this->_replace[0] : '',
+            'target' => !empty($this->_replace[1]) ? $this->_replace[1] : ''
+        ];
     }
 
     /**
@@ -248,22 +278,22 @@ final class Options {
     public function getTab(){
         return $this->_tab;
     }
-    
+
     /**
      * 单词首字母大小写
-     * 
+     *
      * @param bool|int $ucwords
      * @return \Lib\Options
      */
     public function setUcwords($ucwords) {
         $this->_ucwords = (bool)$ucwords;
-        
+
         return $this;
     }
-    
+
     /**
      * 单词首字母大小写
-     * 
+     *
      * @return boolean
      */
     public function getUcwords() {

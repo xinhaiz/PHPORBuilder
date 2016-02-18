@@ -7,6 +7,7 @@ final class Content {
     protected static $_instance = null;
     private $_columns           = null;
     private $_tableName         = null;
+    private $_className         = null;
     private $_tab               = null;
 
     /**
@@ -45,6 +46,16 @@ final class Content {
         }
 
         return self::$_instance;
+    }
+
+    /**
+     * @param string $tableName
+     * @return \Lib\Modelfile
+     */
+    public function setClassName($className) {
+        $this->_className = (string)$className;
+
+        return $this;
     }
 
     /**
@@ -120,7 +131,7 @@ final class Content {
             $namespace = '';
         }
 
-        $buffer->pushClass($build->toClass($namespace . $this->_tableName));
+        $buffer->pushClass($build->toClass($namespace . $this->_className));
 
         foreach ($columns as $column) {
             $struct  = new \Model\Columnstruct($column);
@@ -173,7 +184,7 @@ final class Content {
 
         $namespace = ($options->getOnNamespace() === false) ? $options->getNamespace() : '';
 
-        \Lib\State::notice('Building class [' . $namespace . sprintf($options->getModelType(), $this->_tableName) . ']');
+        \Lib\State::notice('Building class [' . $namespace . sprintf($options->getModelType(), $this->_className) . ']');
         $items[] = $buffer->pullClass();
 
         \Lib\State::notice('Building class property');
@@ -223,7 +234,7 @@ final class Content {
 
         $commentArr[] = '@param ' . $dataType . ' $' . $propName;
         $commentArr[] = '@return ' . ltrim($options->getNamespace(), '_')
-                . sprintf($options->getModelType(), $this->_tableName);
+                . sprintf($options->getModelType(), $this->_className);
 
         $buffer->pushFunc($build->toComment($commentArr));
         $buffer->pushFunc($build->toSetFunc(ucfirst($name), array(

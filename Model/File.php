@@ -5,8 +5,8 @@ namespace Model;
 final class File {
 
     protected static $_instance = null;
-    private $_tableName = null;
-    private $_file      = null;
+    private $_fileName = null;
+    private $_file     = null;
 
     public function __construct() {}
 
@@ -24,11 +24,11 @@ final class File {
     }
 
     /**
-     * @param string $tableName
+     * @param string $fileName
      * @return \Lib\Modelfile
      */
-    public function setTableName($tableName) {
-        $this->_tableName = (string)$tableName;
+    public function setFileName($fileName) {
+        $this->_fileName = (string)$fileName;
         $this->_file = null;
 
         return $this;
@@ -38,7 +38,7 @@ final class File {
      * 重置
      */
     public function reset(){
-        $this->_tableName = null;
+        $this->_fileName = null;
         $this->_file      = null;
     }
 
@@ -75,7 +75,7 @@ final class File {
             mkdir($dir, 0755, true);
         }
 
-        $this->_file = $dir . DS . $this->_tableName . $options->getExt();
+        $this->_file = $dir . DS . $this->_fileName . $options->getExt();
 
         return true;
     }

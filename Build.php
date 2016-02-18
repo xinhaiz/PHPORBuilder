@@ -74,9 +74,15 @@ final class Build {
         \Lib\State::notice('Found ' . sizeof($tables) . ' table(s)');
         $modelFile     = \Model\File::getInstance();
         $modelContents = \Model\Content::getInstance();
+        $replaceArr    = $op->getReplace() ?: [];
 
         foreach ($tables as $table) {
             $tableName = \Lib\Func::uc($table);
+            $className = $tableName;
+
+            if(!empty($replaceArr['source']) && !empty($replaceArr['target'])) {
+                $className = str_ireplace($replaceArr['source'], ucfirst($replaceArr['target']), $className);
+            }
 
             if (preg_match('/^[0-9]+/', $tableName)) {
                 $tableName = ltrim(preg_replace('/^[0-9]+/', '', $tableName), '_');
@@ -85,10 +91,13 @@ final class Build {
             \Lib\State::notice('-----------------');
             \Lib\State::notice('Processing [' . $table . ']');
             $modelContents->setTableInfo($db->findTableInfo($table));
-            $modelContents->setTableName($tableName)->setColumns($db->findCols($table))->build();
+            $modelContents->setClassName($className);
+            $modelContents->setTableName($tableName);
+            $modelContents->setColumns($db->findCols($table));
+            $modelContents->build();
             \Lib\State::notice('Done');
 
-            $modelFile->setTableName($tableName)->build();
+            $modelFile->setFileName($className)->build();
             $modelContents->reset();
             $modelFile->reset();
         }
@@ -163,7 +172,8 @@ final class Build {
         $item[] = ' l  Model Class文件名/类名是否保留下划线, 默认 false';
         $item[] = ' L  Model Class方法名是否保留下划线, 默认 true [弃用]';
         $item[] = ' m  Model Class命名类型, 默认 1，1. %sModel  2. Model%s  3.%s_Model  4. Model_%s';
-        $item[] = ' N  Model Class的命名空间，默认 \\';
+        $item[] = ' R  自定义替换类名及文件名，格式 source:target, target相应字符首字母将被自动大写';
+        $item[] = ' N  Model Class的命名空间，默认 \ ';
         $item[] = ' F  Model Class能支持写 final 关键字, 默认 false';
         $item[] = ' U  文件名/类名/列名所有 _ 分隔单词首字母大写，否则仅第一单词首字母大写, 默认 false';
         $item[] = ' o  是否开启命名空间， 默认 true';
