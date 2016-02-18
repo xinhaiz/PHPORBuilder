@@ -1,1 +1,3 @@
 BuildResult/*
+.*
+!.gitignore
