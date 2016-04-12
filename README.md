@@ -1,5 +1,5 @@
 # Gorm v1.2.1 Beta
-一个快速构建PHP ORM类的工具
+一个快速构建PHP OR类的工具
 
 ## Requirement
 - PHP 5.4 + (PDO support)
