@@ -75,7 +75,7 @@ class Db extends \Config\ConfigAbstract {
             'username' => 'test',
             'passwd'   => 'test',
             'port'     => '3306',
-            'options'  => array("SET NAMES 'utf8'")
+            'options'  => array("SET NAMES 'utf8mb4'")
         );
     }
 }
@@ -121,7 +121,7 @@ class Db extends \Config\ConfigAbstract {
 - 增加对接口类写入Model Class类的支持
 - 增加Model Class方法名是否保留下划线支持, 默认为 `true`
 - 增加MySQL Port自定义支持, 配置选项为 `+P`
-- 增加MySQL数据库驱动选项处理支持, 配置选项为 `+O`, 默认为 `SET NAMES 'utf8'`
+- 增加MySQL数据库驱动选项处理支持, 配置选项为 `+O`, 默认为 `SET NAMES 'utf8mb4'`
 - 增加MySQL使用选项 `+p` 流输入支持, 并且建议使用此方式
 - 更改类名的合法检测, 将保证类名以[A-Z]任一字母开头
 - 更新 `+H` 选项相应的输出说明

@@ -111,6 +111,17 @@ final class Content {
         $options = \Lib\Options::getInstance();
         $items   = array();
 
+        $namespace = ltrim(trim($options->getNamespace(), '\\'), '_');
+
+        if (!empty($namespace) && $options->getOnNamespace() === true) {
+            $buffer->pushHeader('namespace ' . $namespace . ';');
+            $buffer->pushHeader(''); // 增加一空行,处理代码格式
+            $namespace = '';
+        }
+
+        $buffer->pushClass($build->toClass($namespace . $this->_className));
+
+
         if(!empty($this->_tableInfo) && $this->_tableInfo instanceof \Model\Tablestruct) {
             $tableInfo    = $this->_tableInfo;
             $tableComment = array(
@@ -122,16 +133,6 @@ final class Content {
 
             $buffer->pushHeader($build->toComment($tableComment, false));
         }
-
-        $namespace = ltrim(trim($options->getNamespace(), '\\'), '_');
-
-        if (!empty($namespace) && $options->getOnNamespace() === true) {
-            $buffer->pushHeader('namespace ' . $namespace . ';');
-            $buffer->pushHeader(''); // 增加一空行,处理代码格式
-            $namespace = '';
-        }
-
-        $buffer->pushClass($build->toClass($namespace . $this->_className));
 
         foreach ($columns as $column) {
             $struct  = new \Model\Columnstruct($column);
@@ -215,7 +216,7 @@ final class Content {
         $commentArr[] = '@var ' . $this->getDateType($struct->getData_type());
 
         $buffer->pushProperty($build->toComment($commentArr));
-        $buffer->pushProperty($build->toProperty('_' . lcfirst($name), $struct->getColumn_default()));
+        $buffer->pushProperty($build->toProperty(lcfirst($name), $struct->getColumn_default()));
     }
 
     /**
@@ -238,7 +239,7 @@ final class Content {
 
         $buffer->pushFunc($build->toComment($commentArr));
         $buffer->pushFunc($build->toSetFunc(ucfirst($name), array(
-            str_repeat($this->_tab, 2) . '$this->_' . $propName . ' = (' . $dataType . ')$' . $propName . ';',
+            str_repeat($this->_tab, 2) . '$this->' . $propName . ' = (' . $dataType . ')$' . $propName . ';',
             '',
             str_repeat($this->_tab, 2) . 'return $this;'
         ), $propName));
@@ -259,7 +260,7 @@ final class Content {
         $commentArr[] = '@return ' . $this->getDateType($struct->getData_type());
 
         $buffer->pushFunc($build->toComment($commentArr));
-        $buffer->pushFunc($build->toGetFunc(ucfirst($name), array(str_repeat($this->_tab, 2) . 'return $this->_' . $propName . ';')));
+        $buffer->pushFunc($build->toGetFunc(ucfirst($name), array(str_repeat($this->_tab, 2) . 'return $this->' . $propName . ';')));
     }
 
     /**

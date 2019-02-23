@@ -91,7 +91,7 @@ final class Build {
      * @return string
      */
     public function toSetFunc($name, array $code, $params) {
-        return $this->toFunc('set' . $name, $code, $params, 'public');
+        return $this->toFunc('set' . \Lib\Func::ucc($name), $code, $params, 'public');
     }
 
     /**
@@ -102,7 +102,7 @@ final class Build {
      * @return string
      */
     public function toGetFunc($name, $code) {
-        return $this->toFunc('get' . $name, $code, null, 'public');
+        return $this->toFunc('get' . \Lib\Func::ucc($name), $code, null, 'public');
     }
 
     /**
@@ -132,7 +132,7 @@ final class Build {
      * @return string
      */
     public function toToArray(array $sets) {
-        $items  = array(str_repeat($this->_tab, 2) . 'return array(');
+        $items  = array(str_repeat($this->_tab, 2) . 'return [');
         $citem  = array();
         $lenArr = array_map(function($name){
             return mb_strlen($name);
@@ -143,13 +143,13 @@ final class Build {
 
         foreach ($sets as $name) {
             $len = $maxLen - mb_strlen($name);
-            $citem[] = str_repeat($this->_tab, 3) . '\'' . $name . '\'' . str_repeat(' ', $len) . '=> $this->_' . lcfirst(\Lib\Func::ucc($name));
+            $citem[] = str_repeat($this->_tab, 3) . '\'' . $name . '\'' . str_repeat(' ', $len) . '=> $this->' . lcfirst(\Lib\Func::ucc($name));
         }
 
         $items[] = implode(',' . "\n", $citem);
         unset($citem);
 
-        $items[] = str_repeat($this->_tab, 2) . ");";
+        $items[] = str_repeat($this->_tab, 2) . "];";
 
         return $this->toFunc('toArray', $items);
     }

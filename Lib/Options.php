@@ -48,7 +48,7 @@ final class Options {
     private $_passwd       = null;
     private $_port         = null;
     private $_dbname       = null;
-    private $_options      = array("SET NAMES 'utf8'");
+    private $_options      = array("SET NAMES 'utf8mb4'");
     private $_table        = null;
 
     private function __construct() {}

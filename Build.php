@@ -106,6 +106,132 @@ final class Build {
     }
 
     /**
+     * 流程处理
+     *
+     * @return boolean
+     * @throws \Lib\Exception
+     */
+    public function testData() {
+        $db = $this->getDbResponse();
+        $op = \Lib\Options::getInstance();
+
+        $tables = $op->getTable();
+
+        if (empty($tables)) {
+            $tables = $db->findTables();
+        } else {
+            foreach ($tables as $table) {
+                if ($db->isExistTable($table) === false) {
+                    \Lib\State::warning('Unkown table \'' . $table . '\'');
+                }
+            }
+        }
+
+        $modelFile     = \Model\File::getInstance();
+        $modelContents = \Model\Content::getInstance();
+        $replaceArr    = $op->getReplace() ?: [];
+
+        foreach ($tables as $table) {
+            $tableName = \Lib\Func::uc($table);
+            $className = $tableName;
+
+            if(!empty($replaceArr['source']) && !empty($replaceArr['target'])) {
+                $className = str_ireplace($replaceArr['source'], ucfirst($replaceArr['target']), $className);
+            }
+
+            if (preg_match('/^[0-9]+/', $tableName)) {
+                $tableName = ltrim(preg_replace('/^[0-9]+/', '', $tableName), '_');
+            }
+
+            $fields = $db->findCols($table);
+            $cols   = [];
+            $values = [];
+            $num    = 10000*100;
+
+            foreach ($fields as $index => $field) {
+                $cols[$index] = $field['column_name'] ?? '';
+            }
+
+            $sql = sprintf('INSERT INTO `%s` (`%s`) VALUES ', $table, implode('`, `', $cols));
+
+            for($idx = 0; $idx < $num; ++$idx) {
+                foreach ($fields as $index => $field) {
+                    $type   = $field['column_type'] ?? 'varchar(8)';
+                    $matchs = [];
+                    preg_match('/([a-z]+)(\(([0-9]+)\))?/i', $type, $matchs);
+                    $typeName = strtolower($matchs[1] ?? 'varchar');
+                    $valueLen = (int)($matchs[3] ?? 8);
+
+                    switch ($typeName) {
+                        case 'date':
+                            $value = "'" . sprintf('2018-%02s-%02s', 4, mt_rand(1, 30)) . "'";
+                        break;
+                        case 'bigint':
+                            $value = mt_rand(0, 999999999999);
+                        break;
+                        case 'int':
+                            $value = mt_rand(0, PHP_INT_MAX % 0xFFFFFFFF);
+                        break;
+                        case 'tinyint':
+                            $value = mt_rand(0, 0x7F);
+                        break;
+                        case 'char':
+                        case 'varchar':
+                        default:
+                            $value = "'" . $this->rand($valueLen) . "'";
+                        break;
+                    }
+
+                    $values[$idx][$index] = $value;
+                }
+
+                if($idx > 0 && (($idx + 1) % 3000 == 0)) {
+                    $valSql = [];
+
+                    foreach ($values as $items) {
+                        $valSql[] = '(' . implode(',', $items) . ')';
+                    }
+
+                    $db->query($sql . implode(',', $valSql));
+
+                    $values = [];
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * 生成一串随机码
+     *
+     * @param int $length
+     * @param boolean $case
+     * @return string
+     */
+    public function rand($length = 12, $case = true) {
+        $str = 'abcdefghijklnmopqsrtvuwxyz123456879';
+
+        if($case === true) {
+            $str .= 'ABCDFEGHIJKLMNOPRQSTUVWXYZ';
+        }
+
+        $slen = strlen($str);
+        $nstr = [];
+
+        while ($length > 0) {
+            $index = mt_rand(0, $slen);
+
+            if(isset($str[$index])) {
+                $nstr[] = $str[$index];
+                --$length;
+            }
+        }
+
+        return implode($nstr);
+    }
+
+    /**
      * 获取 DB 资源
      *
      * @return Db

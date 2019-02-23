@@ -84,7 +84,7 @@ final class Params {
                 continue;
             }
 
-            if (strcmp($option, '+p') === 0) {
+            if (strcmp($option, '+p') === 0 && empty($val)) {
                 echo 'Enter password: ';
 
                 if(strcasecmp(PHP_OS, 'linux') === 0 || strcasecmp(PHP_OS, 'darwin') === 0) {

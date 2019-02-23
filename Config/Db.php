@@ -11,7 +11,7 @@ class Db extends \Config\ConfigAbstract {
             'username' => 'root',
             'passwd'   => 'root',
             'port'     => '3306',
-            'options'  => array("SET NAMES 'utf8'")
+            'options'  => array("SET NAMES 'utf8mb4'")
         );
     }
 

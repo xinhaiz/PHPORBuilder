@@ -51,6 +51,15 @@ class Db {
     }
 
     /**
+     * 执行SQL
+     *
+     * @param string $sql
+     */
+    public function query($sql) {
+        return $this->_db->query($sql);
+    }
+
+    /**
      * 获取所有表名
      *
      * @return boolean
@@ -94,7 +103,7 @@ class Db {
 
         return (isset($count['total']) && $count['total'] > 0) ? true : false;
     }
-    
+
     /**
      * 获取表信息
      *
