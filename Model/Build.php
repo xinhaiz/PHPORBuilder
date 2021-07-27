@@ -75,11 +75,24 @@ final class Build {
      * 创建属性
      *
      * @param string $name
+     * @param string $type
      * @param string $value
      * @return string
      */
-    public function toProperty($name, $value, $permissions = 'protected') {
-        return $this->_tab . $permissions . ' $' . $name . ' = ' . ($value === null ? 'null' : (!is_numeric($value) ? "'" . $value . "'" : $value)) . ';' . "\n";
+    public function toProperty($name, $type, $value, $permissions = 'protected') {
+        switch($type) {
+            case 'int':
+                $value = (int)$value;
+            break;
+            case 'float':
+                $value = (float)$value;
+            break;
+            default:
+                $value = $value === null ? 'null' : ("'" . $value . "'");
+            break;
+        }
+
+        return $this->_tab . $permissions . ' $' . $name . ' = ' . $value . ';' . "\n";
     }
 
     /**

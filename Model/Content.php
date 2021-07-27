@@ -216,7 +216,7 @@ final class Content {
         $commentArr[] = '@var ' . $this->getDateType($struct->getData_type());
 
         $buffer->pushProperty($build->toComment($commentArr));
-        $buffer->pushProperty($build->toProperty(lcfirst($name), $struct->getColumn_default()));
+        $buffer->pushProperty($build->toProperty(lcfirst($name), $struct->getData_type(), $struct->getColumn_default()));
     }
 
     /**
