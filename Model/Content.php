@@ -209,14 +209,15 @@ final class Content {
      * @param array $commentArr
      */
     protected function buildPropertyContent(\Model\Columnstruct $struct, array $commentArr) {
-        $build   = \Model\Build::getInstance();
-        $buffer  = \Model\Buffer::getInstance();
-        $name    = \Lib\Func::ucc($struct->getColumn_name());
+        $build    = \Model\Build::getInstance();
+        $buffer   = \Model\Buffer::getInstance();
+        $name     = \Lib\Func::ucc($struct->getColumn_name());
+        $dateType = $this->getDateType($struct->getData_type());
 
-        $commentArr[] = '@var ' . $this->getDateType($struct->getData_type());
+        $commentArr[] = '@var ' . $dateType;
 
         $buffer->pushProperty($build->toComment($commentArr));
-        $buffer->pushProperty($build->toProperty(lcfirst($name), $struct->getData_type(), $struct->getColumn_default()));
+        $buffer->pushProperty($build->toProperty(lcfirst($name), $dateType, $struct->getColumn_default()));
     }
 
     /**
