@@ -168,6 +168,9 @@ final class Options {
             case 4:
                 $format = 'Model_%s';
                 break;
+            case 9:
+                $format = '%s';
+                break;
             case 1:
             default :
                 $format = '%sModel';
